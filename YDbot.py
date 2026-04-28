@@ -62,7 +62,7 @@ async def search_query(queue, user_id, query, number=5, a=0, b=5):
     Synchronous search – returns list of dicts with 'id', 'title', 'channel', etc.
     Runs in a thread to avoid blocking the bot.
     """
-    global users_query
+    global users_query, users_band
     # global users_band
     
     if query != "":
@@ -595,7 +595,7 @@ async def command_handler(message):
         
 @client.on_callback_query()
 async def handle_callback(callback_query):
-        global users_query
+        global users_query, users_band
         
         # print(users_query)
     # if callback_query.data == "help_pressed":
@@ -648,7 +648,7 @@ async def handle_callback(callback_query):
             # [a, b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a,b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
             
-            print(users_band[users_band['user_id'] == str(user_id)])
+            print(users_band)
             
             # await yt_search(user_id, message_id, '', 50, a, b)
 

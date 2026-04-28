@@ -83,7 +83,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             for index in entries:
                 
-                vid_url = f"https://youtu.be/{index.get('id')}"
+                vid_url = f"https://www.youtube.com/watch?v={index.get('id')}"
                 
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     info =  ydl.extract_info(vid_url, download=False)

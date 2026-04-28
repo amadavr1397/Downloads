@@ -208,7 +208,7 @@ async def send_query(queue, user_id):
         print(f'It has Error {e}')
         
     
-    users_settings[user_id]['msg_id'] = msg_id  
+    users_settings[user_id]['msg_id'] = tmp_msg  
    
     
 async def yt_search(user_id, query_title, number=5, a=0, b=5):

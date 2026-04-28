@@ -363,18 +363,16 @@ async def upload_video(queue, message):
             os.remove(f'{pattern}___part_{i:03d}.mp4')
             
         await asyncio.sleep(1)
-            
-            
-                
-        # org_vid_pth = "Downloads" / f"{title}.mp4"
         
-        
-                
+            
+   
             
                 
     await message.reply(f'کل ویدیوی دلخواهتو گرفتم 🥳 \n{orginal_title}')
     await client.send_message(message.chat.id,"😍")
     os.remove(f"{pattern}.mp4")
+    
+    print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
     
     
     
@@ -522,7 +520,7 @@ async def command_handler(message):
             pass
         
         await yt_download(message, url_vid, new_title, target_size_mb)
-        print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
+        # print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
 
         
         # queue = asyncio.Queue()

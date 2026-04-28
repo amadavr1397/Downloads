@@ -71,7 +71,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             'quiet': True,
             'skip_download': True,
             # 'extract_flat': True,   # fast, no full extraction
-            'extractor_args': {'youtube': {'player_client': ['android']}},
+            # 'extractor_args': {'youtube': {'player_client': ['android']}},
             'cookiefile': 'YTDLnis_Cookies.txt',
         }
         prefix = "ytsearch" 

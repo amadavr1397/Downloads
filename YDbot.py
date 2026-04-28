@@ -516,6 +516,8 @@ async def command_handler(message):
             users_query = users_query[users_query['user_id'] != f'{user_id}']
             users_settings.pop(user_id)
             
+            print(len(users_settings))
+            
         except KeyError:
             
             pass

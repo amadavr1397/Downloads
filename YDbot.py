@@ -516,13 +516,14 @@ async def command_handler(message):
             users_query = users_query[users_query['user_id'] != f'{user_id}']
             users_settings.pop(user_id)
             
-            print(len(users_settings))
             
         except KeyError:
             
             pass
         
         await yt_download(message, url_vid, new_title, target_size_mb)
+        print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
+
         
         # queue = asyncio.Queue()
         # await asyncio.ghater(download_youtube(queue,url_vid,new_title), 

@@ -15,7 +15,8 @@ import pandas as pd
 import math
 
 users_query = pd.DataFrame()
-users_band = pd.DataFrame()
+
+users_settings = {}
 
 # users_band = pd.DataFrame({
 #             'user_id': '',
@@ -57,15 +58,15 @@ def get_video_info(input_path):
     return duration, bitrate
 
     
-async def search_query(queue, user_id, query, number=5, a=0, b=5):
+async def search_query(queue, user_id, search, number=5, a=0, b=5):
     """
     Synchronous search – returns list of dicts with 'id', 'title', 'channel', etc.
     Runs in a thread to avoid blocking the bot.
     """
-    global users_query, users_band
+    global users_query, users_settings
     # global users_band
     
-    if query != "":
+    if search != "":
         ydl_opts = {
             'quiet': True,
             'skip_download': True,
@@ -74,7 +75,7 @@ async def search_query(queue, user_id, query, number=5, a=0, b=5):
         }
         prefix = "ytsearch" 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(f"{prefix}{number}:{query}", download=False)
+            info = ydl.extract_info(f"{prefix}{number}:{search}", download=False)
             
             # print(f'infooooooooooooooooooooooooooooooooooooooooooooooooooooo{info}')
             entries = info.get('entries', [])
@@ -115,16 +116,11 @@ async def search_query(queue, user_id, query, number=5, a=0, b=5):
             print(len(users_query))
             print(a,b)
             
-            tmp = []
-            tmp.append(
-                    {
-                        'user_id': f'{user_id}',
-                        'band': [a,b]
+            # tmp = []
+            users_settings[user_id] = {
+                        'band': [a,b],
+                        'msg_id': []
                     }
-            )
-            tmp = pd.DataFrame(tmp)
-            global users_band
-            users_band = pd.concat([users_band, tmp], ignore_index=True)
             
             # print(users_query)
             
@@ -133,73 +129,87 @@ async def search_query(queue, user_id, query, number=5, a=0, b=5):
             # else:
             #     v['_thumb'] = None
         # configs[user_id] = info
+            
         
-            await queue.put([number, users_query.iloc[a:b]])
+            await queue.put([search, users_query.iloc[a:b]])
         
     else:
         
             # print(users_query.iloc[a:b])
-            await queue.put([number, users_query.iloc[a:b]])
+            await queue.put([search, users_query.iloc[a:b]])
     
     
     
     
-async def send_query(queue, user_id, message_id):
+async def send_query(queue, user_id):
     
-    items = await queue.get()
 
-    number = items[0]
+    items = await queue.get()
+    search = items[0]
     users_query = items[1]
     usr_query = users_query[users_query['user_id'] == str(user_id)]
     
-    print(usr_query)
+    # print(usr_query)
+    
+    
     
     for index in range(len(usr_query)):
             
         query = usr_query.iloc[index]
         
-        btn = InlineKeyboardButton(text=" ⬇️ Download 🎥 ",callback_data=f'D{user_id}.{message_id}.{query['id']}')
+        btn = InlineKeyboardButton(text=" ⬇️ Download 🎥 ",callback_data=f'D{user_id}.{query['id']}')
         
         keyboard_ = InlineKeyboard()
         keyboard_.add_row(btn)
         
         
         try:
-            await client.send_photo(user_id,query['thumbnail'],
+            msg_id = await client.send_photo(user_id,query['thumbnail'],
                                 f'🎬 نام: {query['title']}  \
                                 🌐 چنل: {query['channel']}  \
                                 ⏰ مدت زمان: {query['duration']} ',
                                 reply_markup=keyboard_)
+            
+            users_settings[user_id]['msg_id'] = msg_id
+            
         except Exception as e:
             
             print(f'It has Error {e}')
             
-            await client.send_message(user_id,
+            msg_id = await client.send_message(user_id,
                                 f'🎬 نام: {query['title']}  \
                                 🌐 چنل: {query['channel']}  \
                                 ⏰ مدت زمان: {query['duration']} ',
                                 reply_markup=keyboard_)
+            
+            users_settings[user_id]['msg_id'] = msg_id
     
-    pre = InlineKeyboardButton(text=" صفحه قبل ◀️",callback_data=f'P{user_id}.{message_id}')
-    nxt = InlineKeyboardButton(text="▶️ صفحه بعد ",callback_data=f'N{user_id}.{message_id}')
+    
+        
+    mor = InlineKeyboardButton(text="بیشتر",callback_data=f'M{user_id}')
 
     keyboard = InlineKeyboard()
-    keyboard.add_row(pre,nxt)
-    # page = math.ceil(number / 5)
+    keyboard.add_row(mor)
+    
+
     try:
-        await client.send_message(user_id,
-                                "asda",
-                                reply_markup=keyboard)
-    except:
+        msg_id = await client.send_message(user_id,
+                            'جستوجوی بیشتر',
+                            reply_markup=keyboard)
         
-        pass
+        users_settings[user_id]['msg_id'] = msg_id
+            
+    except Exception as e:
+        
+        print(f'It has Error {e}')
+      
+   
     
-    
-async def yt_search(user_id, message_id, query_title, number=5, a=0, b=5):
+async def yt_search(user_id, query_title, number=5, a=0, b=5):
     
     queue = asyncio.Queue()
     await asyncio.gather(search_query(queue, user_id, query_title, number, a, b),
-                        send_query(queue, user_id, message_id))
+                        send_query(queue, user_id))
     
     
     
@@ -404,13 +414,13 @@ async def command_handler(message):
             
             query_title = message.text.split(' ')[1:]
             user_id = message.chat.id
-            message_id = message.id
+            # message_id = message.id
             
             
             # [a,b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             
             # print(a,b)
-            await yt_search(user_id, message_id, query_title, 50, 0, 5)
+            await yt_search(user_id, query_title, 50, 0, 5)
             
             # btn_0 = InlineKeyboardButton(text="⬇️ مرتبط ترین 🎥 ",callback_data='most')
             # btn_1 = InlineKeyboardButton(text="⬇️ جدید ترین 🎥 ",callback_data='new')
@@ -638,17 +648,26 @@ async def handle_callback(callback_query):
             global target_size_mb
             await yt_download(callback_query.message, url_vid, new_title, target_size_mb)
             
-        elif (callback_query.data.startswith('P')):
+        elif (callback_query.data.startswith('M')):
             
-            str = callback_query.data[1:].split(".")
-            user_id = str[0]
-            message_id = str[1]
+            user_id = callback_query.message.chat.id
+            print(user_id)
+            [a,b] = users_settings[user_id]['band']
+            
+            a = a + 5
+            b = b + 5
+            
+            if (b > 50):
+                
+                a = 0; b = 5
+            
+            users_settings[user_id]['band'] = [a, b]
                         
             # [a, b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
-            [a, b] = users_band[users_band['user_id'] == user_id]['band'].to_list()[0]
+            # [a, b] = users_band[users_band['user_id'] == user_id]['band'].to_list()[0]
             
-            print(users_band,a,b)
+            print(user_id,a,b)
             
             # await yt_search(user_id, message_id, '', 50, a, b)
 

@@ -597,7 +597,7 @@ async def command_handler(message):
 async def handle_callback(callback_query):
         global users_query
         
-        print(users_query)
+        # print(users_query)
     # if callback_query.data == "help_pressed":
         # await callback_query.message.reply(f'{user_id}_{random()}')
         # await callback_query.answer("Help shown!")  # Acknowledge the button press
@@ -646,7 +646,7 @@ async def handle_callback(callback_query):
                         
             # [a, b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
-            [a,b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
+            # [a,b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
             
             print(users_band[users_band['user_id'] == str(user_id)])
             

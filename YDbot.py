@@ -158,6 +158,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                         'id': e.get('id'),
                         'title': e.get('title'),
                         # 'url': e.get('url'),
+                        'channel': e.get('channel'),
                         'duration': e.get('duration'),
                         'thumbnail': f"https://i.ytimg.com/vi/{e.get('id')}/hqdefault.jpg",
                         
@@ -221,8 +222,7 @@ async def send_query(queue, user_id):
             msg_id = await client.send_photo(user_id,query['thumbnail'],
                                 f"🎬 نام: {query['title']}  \
                                 🌐 چنل: {query['channel']}  \
-                                ⏰ مدت زمان: {query['duration']} \
-                                upload dat: {query['upload_date']}",
+                                ⏰ مدت زمان: {query['duration']}",
                                 reply_markup=keyboard_)
             
             tmp_msg.append(msg_id)

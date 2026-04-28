@@ -117,7 +117,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             print(a,b)
             
             # tmp = []
-            users_settings[user_id] = {
+            users_settings[f'{user_id}'] = {
                         'band': [a,b],
                         'msg_id': []
                     }
@@ -208,7 +208,7 @@ async def send_query(queue, user_id):
         print(f'It has Error {e}')
         
     
-    users_settings[user_id]['msg_id'] = tmp_msg  
+    users_settings[f'{user_id}']['msg_id'] = tmp_msg  
    
     
 async def yt_search(user_id, query_title, number=5, a=0, b=5):
@@ -420,6 +420,8 @@ async def command_handler(message):
             
             query_title = message.text.split(' ')[1:]
             user_id = message.chat.id
+            
+            print(type(user_id))
             # message_id = message.id
             
             
@@ -663,7 +665,7 @@ async def handle_callback(callback_query):
             
             user_id = callback_query.message.chat.id
 
-            [a,b] = users_settings[user_id]['band']
+            [a,b] = users_settings[f'{user_id}']['band']
             
             a = a + 5
             b = b + 5
@@ -672,7 +674,7 @@ async def handle_callback(callback_query):
                 
                 a = 0; b = 5
             
-            users_settings[user_id]['band'] = [a, b]
+            users_settings[f'{user_id}']['band'] = [a, b]
             
             # print(users_settings)
                         

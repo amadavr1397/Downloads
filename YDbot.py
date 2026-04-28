@@ -428,6 +428,7 @@ async def command_handler(message):
             # print(a,b)
             
             try:
+                users_query = users_query[users_query['user_id'] != f'{user_id}']
                 users_settings.pop(user_id)
             
             except KeyError:
@@ -511,6 +512,8 @@ async def command_handler(message):
         # output_pat = f"{downloads_path}/{new_title}___part_%03d.mp4"
         
         try:
+            
+            users_query = users_query[users_query['user_id'] != f'{user_id}']
             users_settings.pop(user_id)
             
         except KeyError:

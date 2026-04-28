@@ -677,7 +677,7 @@ async def handle_callback(callback_query):
             print(user_id,a,b)
             
             
-            users_settings[user_id]['msg_id'][-1].delete()
+            await users_settings[user_id]['msg_id'][-1].delete()
             
             
             await yt_search(user_id, '', 50, a, b)

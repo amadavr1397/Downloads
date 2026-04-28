@@ -71,7 +71,6 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             'quiet': True,
             'skip_download': True,
             'extract_flat': False,   # fast, no full extraction
-            'extractor_args': {'youtube': {'player_client': ['web_embedded']}},
             'cookiefile': 'YTDLnis_Cookies.txt',
         }
         
@@ -160,7 +159,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                         'title': e.get('title'),
                         # 'url': e.get('url'),
                         'channel': e.get('channel'),
-                        'duration': e.get('duration'),
+                        'duration': info.get('duration_string', '?'),
                         'thumbnail': f"https://i.ytimg.com/vi/{e.get('id')}/hqdefault.jpg",
                         
                     })

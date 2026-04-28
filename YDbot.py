@@ -83,6 +83,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             for index in entries:
                 
+                print(index.get('id'))
                 vid_url = f"https://www.youtube.com/watch?v={index.get('id')}"
                 
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -102,7 +103,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                 views = info.get('view_count', 0)
                 likes = info.get('like_count')
                 thumbnail = f"https://i.ytimg.com/vi/{id}/hqdefault.jpg"               
-                description = (info.get('description') or '')[:300]
+                description = (info.get('description') or '')[:50]
 
                 
                 

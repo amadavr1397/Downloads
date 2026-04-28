@@ -9,7 +9,7 @@ import subprocess
 import json
 import glob
 # import re
-# from datetime import datetime
+from datetime import datetime
 # import time
 import pandas as pd
 import math
@@ -70,7 +70,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         ydl_opts = {
             'quiet': True,
             'skip_download': True,
-            'extract_flat': True,   # fast, no full extraction
+            # 'extract_flat': True,   # fast, no full extraction
             'cookiefile': 'YTDLnis_Cookies.txt',
         }
         prefix = "ytsearch" 
@@ -79,6 +79,10 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             # print(f'infooooooooooooooooooooooooooooooooooooooooooooooooooooo{info}')
             entries = info.get('entries', [])
+            
+            # for index in entries:
+                
+            #     vid_ = f"https://youtu.be/{index.get('id')}"
             
             # print(f'++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{entries}')
             
@@ -103,9 +107,12 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                         'user_id': f'{user_id}',
                         'id': e.get('id'),
                         'title': e.get('title'),
+                        'upload_date': e.get('upload_date'),
                         'url': e.get('url'),
                         'channel': e.get('channel'),
                         'duration': e.get('duration'),
+                        'views': e.get('view_count', 0),
+                        'likes': e.get('like_count'),
                         'thumbnail': f"https://i.ytimg.com/vi/{e.get('id')}/hqdefault.jpg",
                         
                     })
@@ -166,9 +173,10 @@ async def send_query(queue, user_id):
         
         try:
             msg_id = await client.send_photo(user_id,query['thumbnail'],
-                                f'🎬 نام: {query['title']}  \
+                                f"🎬 نام: {query['title']}  \
                                 🌐 چنل: {query['channel']}  \
-                                ⏰ مدت زمان: {query['duration']} ',
+                                ⏰ مدت زمان: {query['duration']} \
+                                upload dat: {query['upload_date']}",
                                 reply_markup=keyboard_)
             
             tmp_msg.append(msg_id)
@@ -239,6 +247,20 @@ async def download_youtube(queue, url, title):
         print(f"Duration: {info.get('duration_string')}")
         print(f"Saving to: {downloads_path}")
         print('dddddddddddddddddddddddddddddddddddddddddddddddddddd',info.get('upload_date'))
+        
+        
+        
+
+        # caption = (
+        #     f"🎬 <b>{title}</b>\n"
+        #     f"📅 Uploaded: {formatted_date}\n"
+        #     f"⏱ Duration: {duration}\n"
+        #     f"👁 Views: {views:,}\n"
+        #     f"❤️ Likes: {likes_str}\n\n"
+        #     f"📄 {description}..."
+        # )
+        
+        
 
         ydl.download([url])
         print("\n✅ Download complete!")

@@ -238,6 +238,7 @@ async def download_youtube(queue, url, title):
         print(f"Title: {info.get('title')}")
         print(f"Duration: {info.get('duration_string')}")
         print(f"Saving to: {downloads_path}")
+        print('dddddddddddddddddddddddddddddddddddddddddddddddddddd',info.get('upload_date'))
 
         ydl.download([url])
         print("\n✅ Download complete!")
@@ -520,7 +521,7 @@ async def command_handler(message):
             pass
         
         await yt_download(message, url_vid, new_title, target_size_mb)
-        # print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
+        print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
 
         
         # queue = asyncio.Queue()

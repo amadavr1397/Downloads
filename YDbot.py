@@ -630,8 +630,7 @@ async def handle_callback(callback_query):
             
             str = callback_query.data[1:].split(".")
             user_id = str[0]
-            message_id = str[1]
-            id = str[2]
+            id = str[1]
             
             # nonlocal users_query
             print(users_query)
@@ -640,10 +639,10 @@ async def handle_callback(callback_query):
             # vid_id = users_query[(users_query['user_id'] == user_id) & (users_query['id'] == id)]['id'].to_list()[0]
             
             
-            print(user_id, message_id, id)
+            print(user_id, id)
             
             url_vid = f"https://www.youtube.com/watch?v={id}"
-            new_title = f"{user_id}_{message_id}"
+            new_title = f"{user_id}_{id}"
             
             global target_size_mb
             await yt_download(callback_query.message, url_vid, new_title, target_size_mb)

@@ -130,13 +130,13 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             #     v['_thumb'] = None
         # configs[user_id] = info
             
-        
-            await queue.put([search, users_query.iloc[a:b]])
+            data = users_query[users_query['user_id'] == f'{user_id}'].iloc[a:b]
+            await queue.put([search, data])
         
     else:
         
-            # print(users_query.iloc[a:b])
-            await queue.put([search, users_query.iloc[a:b]])
+            data = users_query[users_query['user_id'] == f'{user_id}'].iloc[a:b]
+            await queue.put([search, data])
     
     
     

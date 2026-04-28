@@ -151,6 +151,7 @@ async def send_query(queue, user_id):
     
     # print(usr_query)
     
+    tmp_msg = []
     
     
     for index in range(len(usr_query)):
@@ -170,7 +171,8 @@ async def send_query(queue, user_id):
                                 ⏰ مدت زمان: {query['duration']} ',
                                 reply_markup=keyboard_)
             
-            users_settings[user_id]['msg_id'] = msg_id
+            tmp_msg.append(msg_id)
+            # users_settings[user_id]['msg_id'] = msg_id
             
         except Exception as e:
             
@@ -182,7 +184,8 @@ async def send_query(queue, user_id):
                                 ⏰ مدت زمان: {query['duration']} ',
                                 reply_markup=keyboard_)
             
-            users_settings[user_id]['msg_id'] = msg_id
+            tmp_msg.append(msg_id)
+            # users_settings[user_id]['msg_id'] = msg_id
     
     
         
@@ -197,12 +200,15 @@ async def send_query(queue, user_id):
                             'جستوجوی بیشتر',
                             reply_markup=keyboard)
         
-        users_settings[user_id]['msg_id'] = msg_id
+        tmp_msg.append(msg_id)
+        # users_settings[user_id]['msg_id'] = msg_id
             
     except Exception as e:
         
         print(f'It has Error {e}')
-      
+        
+    
+    users_settings[user_id]['msg_id'] = msg_id  
    
     
 async def yt_search(user_id, query_title, number=5, a=0, b=5):
@@ -662,13 +668,17 @@ async def handle_callback(callback_query):
             
             users_settings[user_id]['band'] = [a, b]
             
-            print(users_settings)
+            # print(users_settings)
                         
             # [a, b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == user_id]['band'].to_list()[0]
             
             print(user_id,a,b)
+            
+            
+            users_settings[user_id]['msg_id'][-1].delete()
+            
             
             await yt_search(user_id, '', 50, a, b)
             

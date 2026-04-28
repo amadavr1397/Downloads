@@ -426,8 +426,12 @@ async def command_handler(message):
             # [a,b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             
             # print(a,b)
-            print(users_settings)
-            users_settings.pop(user_id)
+            
+            try:
+                users_settings.pop(user_id)
+            
+            except KeyError:
+                pass
             
             await yt_search(user_id, query_title, 50, 0, 5)
             
@@ -506,8 +510,12 @@ async def command_handler(message):
         # input_file = f"{video_path}/{new_title}.mp4"
         # output_pat = f"{downloads_path}/{new_title}___part_%03d.mp4"
         
-        print(users_settings.keys())
-        users_settings.pop(user_id)
+        try:
+            users_settings.pop(user_id)
+            
+        except KeyError:
+            
+            pass
         
         await yt_download(message, url_vid, new_title, target_size_mb)
         

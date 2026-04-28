@@ -646,7 +646,7 @@ async def handle_callback(callback_query):
                         
             # [a, b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
-            [a,b] = users_band[users_band['user_id'] == str(user_id)]
+            [a,b] = users_band[users_band['user_id'] == user_id]['band'].to_string()[0]
             
             print(users_band,a,b)
             

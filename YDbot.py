@@ -159,7 +159,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                         'title': e.get('title'),
                         # 'url': e.get('url'),
                         'channel': e.get('channel'),
-                        'duration': info.get('duration_string', '?'),
+                        'duration': e.get('duration_string', '?'),
                         'thumbnail': f"https://i.ytimg.com/vi/{e.get('id')}/hqdefault.jpg",
                         
                     })

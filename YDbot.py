@@ -75,64 +75,64 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         }
         
         
-        ydl_opts_2 = {
-            'quiet': True,
-            'skip_download': True,
-            'extract_flat': False,   # fast, no full extraction
-            'extractor_args': {'youtube': {'player_client': ['web_embedded']}},
-            'cookiefile': 'YTDLnis_Cookies.txt',
-        }
+        # ydl_opts_2 = {
+        #     'quiet': True,
+        #     'skip_download': True,
+        #     'extract_flat': False,   # fast, no full extraction
+        #     'extractor_args': {'youtube': {'player_client': ['web_embedded']}},
+        #     'cookiefile': 'YTDLnis_Cookies.txt',
+        # }
         prefix = "ytsearch" 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"{prefix}{number}:{search}", download=False)
             entries = info.get('entries', [])
             
-            tmp = []
+            # tmp = []
             
-            for index in entries:
+            # for index in entries:
                 
-                print(index.get('id'))
-                vid_url = f"https://www.youtube.com/watch?v={index.get('id')}"
+            #     print(index.get('id'))
+            #     vid_url = f"https://www.youtube.com/watch?v={index.get('id')}"
                 
-                with yt_dlp.YoutubeDL(ydl_opts_2) as ydl:
-                    info =  ydl.extract_info(vid_url, download=False)
+            #     with yt_dlp.YoutubeDL(ydl_opts_2) as ydl:
+            #         info =  ydl.extract_info(vid_url, download=False)
                     
                     
-                id = index.get('id')
-                title = info.get('title', 'N/A')
-                upload_date = info.get('upload_date')
-                if upload_date:
-                    dt = datetime.strptime(upload_date, '%Y%m%d')
-                    formatted_date = dt.strftime('%d %B %Y')
-                else:
-                    formatted_date = 'Unknown'
-                channel = info.get('channel')
-                duration = info.get('duration_string', '?')
-                # views = info.get('view_count', 0)
-                # likes = info.get('like_count')
-                thumbnail = f"https://i.ytimg.com/vi/{id}/hqdefault.jpg"               
-                # description = (info.get('description') or '')[:50]
+            #     id = index.get('id')
+            #     title = info.get('title', 'N/A')
+            #     upload_date = info.get('upload_date')
+            #     if upload_date:
+            #         dt = datetime.strptime(upload_date, '%Y%m%d')
+            #         formatted_date = dt.strftime('%d %B %Y')
+            #     else:
+            #         formatted_date = 'Unknown'
+            #     channel = info.get('channel')
+            #     duration = info.get('duration_string', '?')
+            #     # views = info.get('view_count', 0)
+            #     # likes = info.get('like_count')
+            #     thumbnail = f"https://i.ytimg.com/vi/{id}/hqdefault.jpg"               
+            #     # description = (info.get('description') or '')[:50]
 
                 
                 
-                tmp.append(
-                    {
-                        'user_id': f'{user_id}',
-                        'id': id,
-                        'title': title,
-                        'upload_date': formatted_date,
-                        'channel': channel,
-                        'duration': duration,
-                        # 'views': views,
-                        # 'likes': likes,
-                        'thumbnail': thumbnail,
-                        # 'description': description
+            #     tmp.append(
+            #         {
+            #             'user_id': f'{user_id}',
+            #             'id': id,
+            #             'title': title,
+            #             'upload_date': formatted_date,
+            #             'channel': channel,
+            #             'duration': duration,
+            #             # 'views': views,
+            #             # 'likes': likes,
+            #             'thumbnail': thumbnail,
+            #             # 'description': description
                         
-                    })
+            #         })
             
-            tmp = pd.DataFrame(tmp)
-            global users_query
-            users_query = pd.concat([users_query, tmp], ignore_index=True)
+            # tmp = pd.DataFrame(tmp)
+            # global users_query
+            # users_query = pd.concat([users_query, tmp], ignore_index=True)
             
             # print(f'++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{entries}')
             
@@ -148,27 +148,23 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             #     }
             #     for e in entries
             # ]
-            # tmp = []
+            tmp = []
             
-            # for e in entries:
+            for e in entries:
                 
-            #     tmp.append(
-            #         {
-            #             'user_id': f'{user_id}',
-            #             'id': e.get('id'),
-            #             'title': e.get('title'),
-            #             'upload_date': e.get('upload_date'),
-            #             'url': e.get('url'),
-            #             'channel': e.get('channel'),
-            #             'duration': e.get('duration'),
-            #             'views': e.get('view_count', 0),
-            #             'likes': e.get('like_count'),
-            #             'thumbnail': f"https://i.ytimg.com/vi/{e.get('id')}/hqdefault.jpg",
+                tmp.append(
+                    {
+                        'user_id': f'{user_id}',
+                        'id': e.get('id'),
+                        'title': e.get('title'),
+                        # 'url': e.get('url'),
+                        'duration': e.get('duration'),
+                        'thumbnail': f"https://i.ytimg.com/vi/{e.get('id')}/hqdefault.jpg",
                         
-            #         })
-            # tmp = pd.DataFrame(tmp)
-            # global users_query
-            # users_query = pd.concat([users_query, tmp], ignore_index=True)
+                    })
+            tmp = pd.DataFrame(tmp)
+            global users_query
+            users_query = pd.concat([users_query, tmp], ignore_index=True)
             
             print(len(users_query))
             print(a,b)

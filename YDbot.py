@@ -112,6 +112,7 @@ async def search_query(queue, user_id, query, number=5, sort_by_newest=False, a=
             users_query = pd.concat([users_query, tmp], ignore_index=True)
             
             print(len(users_query))
+            print(a,b)
             
             # tmp = []
             # tmp.append(

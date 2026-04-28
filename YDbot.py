@@ -56,7 +56,7 @@ def get_video_info(input_path):
     return duration, bitrate
 
     
-async def search_query(queue, user_id, query, number=5, sort_by_newest=False, a=0, b=5):
+async def search_query(queue, user_id, query, number=5, a=0, b=5):
     """
     Synchronous search – returns list of dicts with 'id', 'title', 'channel', etc.
     Runs in a thread to avoid blocking the bot.
@@ -71,7 +71,7 @@ async def search_query(queue, user_id, query, number=5, sort_by_newest=False, a=
             'extract_flat': True,   # fast, no full extraction
             'cookiefile': 'YTDLnis_Cookies.txt',
         }
-        prefix = "ytsearchdate" if sort_by_newest else "ytsearch"
+        prefix = "ytsearch" 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"{prefix}{number}:{query}", download=False)
             

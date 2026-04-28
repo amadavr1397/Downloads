@@ -14,14 +14,7 @@ import glob
 import pandas as pd
 import math
 
-users_query = pd.DataFrame({
-            'user_id': [''],
-            'id': [''],
-            'title': [''],
-            'url': [''],
-            'channel': [''],
-            'duration': [''],
-            'thumbnail': ['']})
+users_query = pd.DataFrame()
 
 # users_band = pd.DataFrame({
 #             'user_id': '',
@@ -689,4 +682,3 @@ async def handle_callback(callback_query):
 if __name__ == "__main__":
     print("Bot is running...")
     client.run()
-

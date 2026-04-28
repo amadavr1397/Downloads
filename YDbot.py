@@ -426,6 +426,8 @@ async def command_handler(message):
             # [a,b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             
             # print(a,b)
+            users_settings.pop(user_id)
+            
             await yt_search(user_id, query_title, 50, 0, 5)
             
             # btn_0 = InlineKeyboardButton(text="⬇️ مرتبط ترین 🎥 ",callback_data='most')
@@ -492,13 +494,17 @@ async def command_handler(message):
         processing_msg = await message.reply("بزار ببینم چی میشه 😜 ")
         await processing_msg.edit_text('داره دانلود میشه')
         
+        user_id = message.chat.id
+        msg_id = message.id
+        
         # define new title with message chat id and message id
-        new_title = f'{str(message.chat.id)}_{str(message.id)}'
+        new_title = f'{str(user_id)}_{str(msg_id)}'
         
         # video_path , title = download_youtube(url_vid,new_title)
         
         # input_file = f"{video_path}/{new_title}.mp4"
         # output_pat = f"{downloads_path}/{new_title}___part_%03d.mp4"
+        users_settings.pop(user_id)
         
         await yt_download(message, url_vid, new_title, target_size_mb)
         

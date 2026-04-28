@@ -650,7 +650,7 @@ async def handle_callback(callback_query):
         elif (callback_query.data.startswith('M')):
             
             user_id = callback_query.message.chat.id
-            print(user_id)
+
             [a,b] = users_settings[user_id]['band']
             
             a = a + 5
@@ -661,12 +661,16 @@ async def handle_callback(callback_query):
                 a = 0; b = 5
             
             users_settings[user_id]['band'] = [a, b]
+            
+            print(users_settings)
                         
             # [a, b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == user_id]['band'].to_list()[0]
             
             print(user_id,a,b)
+            
+            await yt_search(user_id, '', 50, a, b)
             
             # await yt_search(user_id, message_id, '', 50, a, b)
 

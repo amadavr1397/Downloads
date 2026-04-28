@@ -70,6 +70,14 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         ydl_opts = {
             'quiet': True,
             'skip_download': True,
+            'extract_flat': True,   # fast, no full extraction
+            'cookiefile': 'YTDLnis_Cookies.txt',
+        }
+        
+        
+        ydl_opts_2 = {
+            'quiet': True,
+            'skip_download': True,
             'extract_flat': False,   # fast, no full extraction
             'extractor_args': {'youtube': {'player_client': ['web_embedded']}},
             'cookiefile': 'YTDLnis_Cookies.txt',
@@ -86,7 +94,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                 print(index.get('id'))
                 vid_url = f"https://www.youtube.com/watch?v={index.get('id')}"
                 
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                with yt_dlp.YoutubeDL(ydl_opts_2) as ydl:
                     info =  ydl.extract_info(vid_url, download=False)
                     
                     

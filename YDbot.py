@@ -15,6 +15,7 @@ import pandas as pd
 import math
 
 users_query = pd.DataFrame()
+users_band = pd.DataFrame()
 
 # users_band = pd.DataFrame({
 #             'user_id': '',
@@ -114,16 +115,16 @@ async def search_query(queue, user_id, query, number=5, a=0, b=5):
             print(len(users_query))
             print(a,b)
             
-            # tmp = []
-            # tmp.append(
-            #         {
-            #             'user_id': f'{user_id}',
-            #             'band': [a,b]
-            #         }
-            # )
-            # tmp = pd.DataFrame(tmp)
-            # global users_band
-            # users_band = pd.concat([users_band, tmp], ignore_index=True)
+            tmp = []
+            tmp.append(
+                    {
+                        'user_id': f'{user_id}',
+                        'band': [a,b]
+                    }
+            )
+            tmp = pd.DataFrame(tmp)
+            global users_band
+            users_band = pd.concat([users_band, tmp], ignore_index=True)
             
             # print(users_query)
             
@@ -179,19 +180,19 @@ async def send_query(queue, user_id, message_id):
                                 ⏰ مدت زمان: {query['duration']} ',
                                 reply_markup=keyboard_)
     
-    # pre = InlineKeyboardButton(text=" صفحه قبل ◀️",callback_data=f'P{user_id}.{message_id}')
-    # nxt = InlineKeyboardButton(text="▶️ صفحه بعد ",callback_data=f'N{user_id}.{message_id}')
+    pre = InlineKeyboardButton(text=" صفحه قبل ◀️",callback_data=f'P{user_id}.{message_id}')
+    nxt = InlineKeyboardButton(text="▶️ صفحه بعد ",callback_data=f'N{user_id}.{message_id}')
 
-    # keyboard = InlineKeyboard()
-    # keyboard.add_row(pre,nxt)
-    # # page = math.ceil(number / 5)
-    # try:
-    #     await client.send_message(user_id,
-    #                             "asda",
-    #                             reply_markup=keyboard)
-    # except:
+    keyboard = InlineKeyboard()
+    keyboard.add_row(pre,nxt)
+    # page = math.ceil(number / 5)
+    try:
+        await client.send_message(user_id,
+                                "asda",
+                                reply_markup=keyboard)
+    except:
         
-    #     pass
+        pass
     
     
 async def yt_search(user_id, message_id, query_title, number=5, a=0, b=5):
@@ -645,9 +646,9 @@ async def handle_callback(callback_query):
                         
             # [a, b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
             # [a, b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
-            # [a,b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
+            [a,b] = users_band[users_band['user_id'] == str(user_id)]['band'].to_list()[0]
             
-            # print(a, b)
+            print(users_band[users_band['user_id'] == str(user_id)])
             
             # await yt_search(user_id, message_id, '', 50, a, b)
 

@@ -389,7 +389,7 @@ async def yt_download(message, url_vid, new_title, video_size):
 @client.on_message()
 async def command_handler(message):
     
-    global target_size_mb
+    global users_query, target_size_mb
     
     if message.text.startswith('/start'):
         

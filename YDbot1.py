@@ -770,12 +770,12 @@ async def handle_callback(callback_query):
         if (callback_query.data.startswith('D')):
             
             str = callback_query.data[1:].split(".")
-            user_id = str[0]
+            user_id = callback_query.message.chat.id
             id = str[1]
             
             # nonlocal users_query
-            print(user_id,id)
-            print(users_settings[user_id])
+            # print(user_id,id)
+            # print(users_settings[user_id])
                         
                         
             url_vid = f"https://www.youtube.com/watch?v={id}"

@@ -154,7 +154,6 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                 })
         
         tmp = pd.DataFrame(tmp)
-        global users_query
         users_query = pd.concat([users_query, tmp], ignore_index=True)
             
             

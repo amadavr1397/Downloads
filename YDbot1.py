@@ -93,7 +93,8 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                     'id_vid': tmp,
                     'msg_id': []
                 }
-        
+        print(users_settings)
+        print(len(users_settings))
         
         ydl_opts = {
             'quiet': True,

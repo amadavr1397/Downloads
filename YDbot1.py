@@ -140,10 +140,10 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                 formatted_date = 'Unknown'
             channel = info.get('channel')
             duration = info.get('duration_string', '?')
-            # views = info.get('view_count', 0)
-            # likes = info.get('like_count')
+            views = info.get('view_count', 0)
+            likes = info.get('like_count')
             thumbnail = f"https://i.ytimg.com/vi/{id}/hqdefault.jpg"               
-            # description = (info.get('description') or '')[:50]
+            description = (info.get('description') or '')[:50]
 
             
             
@@ -155,10 +155,10 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                     'upload_date': formatted_date,
                     'channel': channel,
                     'duration': duration,
-                    # 'views': views,
-                    # 'likes': likes,
+                    'views': views,
+                    'likes': likes,
                     'thumbnail': thumbnail,
-                    # 'description': description
+                    'description': description
                     
                 })
         
@@ -181,6 +181,15 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         except:
             
             pass
+        
+        
+        ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+                'remote_components': ['ejs:github'],
+                'cookiefile': 'YTDLnis_Cookies.txt',
+                'js_runtime': 'deno',
+        }
         
         tmp = []
         

@@ -88,7 +88,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             tmp.append(e.get('id'))
             
-        users_settings[f'{user_id}'] = {
+        users_settings[user_id] = {
                     'band': [a,b],
                     'id_vid': tmp,
                     'msg_id': []
@@ -110,7 +110,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         
         try:
             
-            users_query = users_query[users_query['user_id'] != str(user_id)]
+            users_query = users_query[users_query['user_id'] != f'{user_id}']
             
         except:
             
@@ -118,7 +118,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         
         
         
-        for id in users_settings[f'{user_id}']['id_vid'][a:b]:
+        for id in users_settings[user_id]['id_vid'][a:b]:
             
          
             url_vid = f"https://www.youtube.com/watch?v={id}"
@@ -160,6 +160,8 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         
         tmp = pd.DataFrame(tmp)
         users_query = pd.concat([users_query, tmp], ignore_index=True)
+        
+        print(users_query[users_query['user_id'] == f'{user_id}'])
             
             
             
@@ -176,7 +178,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             pass
         
-        for id in users_settings[f'{user_id}']['id_vid'][a:b]:
+        for id in users_settings[user_id]['id_vid'][a:b]:
         
         
             url_vid = f"https://www.youtube.com/watch?v={id}"

@@ -25,6 +25,8 @@ users_settings = {}
 
 BOT_TOKEN = "603712811:18ZjnxdM4PNc-LGRxprEOmltSkQCxV-kZ98"
 
+BOT_TOKEN = input(f"Enter a TOKEN : \n")
+
 # Create the client instance
 client = Client(BOT_TOKEN)
 

@@ -71,7 +71,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             'quiet': True,
             'skip_download': True,
             'extract_flat': False,   # fast, no full extraction
-            'js_runtime': 'node',
+            'js_runtime': '/root/node-v22.14.0-linux-x64/bin/node',
             'cookiefile': 'YTDLnis_Cookies.txt',
         }
         

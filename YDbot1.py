@@ -93,6 +93,8 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
                     'id_vid': tmp,
                     'msg_id': []
                 }
+        
+        os.system(f'print {users_settings} > set.txt')
         print(users_settings)
         print(len(users_settings))
         

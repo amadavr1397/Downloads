@@ -98,14 +98,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         print(users_settings)
         print(len(users_settings))
         
-        ydl_opts = {
-            'quiet': True,
-            'skip_download': True,
-            'extractor_args': {'youtube': {'player_client': ['web_embedded']}},
-            'remote_components': ['ejs:github'],
-            'cookiefile': 'YTDLnis_Cookies.txt',
-            'js_runtime': 'deno',
-        }
+  
         
         
         try:
@@ -117,8 +110,19 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             pass
         
         
+        ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+                'remote_components': ['ejs:github'],
+                'cookiefile': 'YTDLnis_Cookies.txt',
+                'js_runtime': 'deno',
+        }
+        
+        tmp = []
         
         for id in users_settings[user_id]['id_vid'][a:b]:
+            
+            print('rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',user_id,id)
             
          
             url_vid = f"https://www.youtube.com/watch?v={id}"
@@ -141,7 +145,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             thumbnail = f"https://i.ytimg.com/vi/{id}/hqdefault.jpg"               
             # description = (info.get('description') or '')[:50]
 
-            tmp = []
+            
             
             tmp.append(
                 {
@@ -178,6 +182,8 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             pass
         
+        tmp = []
+        
         for id in users_settings[user_id]['id_vid'][a:b]:
         
         
@@ -201,7 +207,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             thumbnail = f"https://i.ytimg.com/vi/{id}/hqdefault.jpg"               
             # description = (info.get('description') or '')[:50]
 
-            tmp = []
+            
             
             tmp.append(
                 {

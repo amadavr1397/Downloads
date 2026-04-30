@@ -388,6 +388,10 @@ async def download_youtube(queue, message, url, title):
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
     hook = make_progress_hook(message)
     
+    await client.send_message(message.chat.id,
+                                            text="uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
+    
+    
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
@@ -403,7 +407,7 @@ async def download_youtube(queue, message, url, title):
         print(f"Title: {info.get('title')}")
         print(f"Duration: {info.get('duration_string')}")
         print(f"Saving to: {downloads_path}")
-        print('dddddddddddddddddddddddddddddddddddddddddddddddddddd',info.get('upload_date'))
+        print('Upload date',info.get('upload_date'))
         
         
         
@@ -550,8 +554,6 @@ async def upload_video(queue, message):
     await client.send_message(message.chat.id,"😍")
     os.remove(f"{pattern}.mp4")
     
-    await client.send_message(message.chat.id,
-                                            text="uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
     
     
     

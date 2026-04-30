@@ -319,24 +319,32 @@ async def yt_search(user_id, query_title, number=5, a=0, b=5):
 
 
 
-async def make_progress_spinner(message, stop_event=False):
+async def make_progress_spinner(message, bot_loop):
     
     msg = await client.send_message(message.chat.id,
                                     text='⠋')
     
     for char in itertools.cycle('⠋⠙⠹⠼⠴⠦⠧⠏'):
     
-        if not stop_event:
             
             try:
-                await msg.edit_text(text=f"⏳ *در حال جستوجو*...{char}")
+                # await msg.edit_text(text=f"⏳ *در حال جستوجو*...{char}")
+                
+                asyncio.run_coroutine_threadsafe(
+                    msg.edit_text(text=f"⏳ *در حال جستوجو*...{char}"),
+                    bot_loop
+                )
+                
             except:
                 pass
             await asyncio.sleep(0.3)
         
-        else:
+        # else:
             
-            await msg.delete()
+        #     await msg.delete()
+            
+            
+    
 
 
 
@@ -368,19 +376,15 @@ def make_progress_hook(status_message, bot_loop):
             speed = d.get('_speed_str', 'N/A')
             eta = d.get('_eta_str', 'N/A')
             text = f"📥 در حال آپلود...\n{bar_line}\n⚡ {speed}"
-
-            # Schedule the edit in the bot's event loop (thread-safe)
-            asyncio.run_coroutine_threadsafe(
-                status_message.edit_text(text),
-                bot_loop
-            )
         
         else:
             
-            asyncio.run_coroutine_threadsafe(
-                status_message.edit_text('✅ فایل آپلود شد'),
-                bot_loop
-            )
+            text = '✅ فایل آپلود شد'
+            
+        asyncio.run_coroutine_threadsafe(
+            status_message.edit_text(text),
+            bot_loop
+        )
 
         
 
@@ -425,6 +429,8 @@ async def download_youtube(queue, message, url, title):
         print("\n✅ Download complete!")
         
         print(f"\n✅ Downloaded: {downloads_path}")
+        
+        msg.delete()
         
         orginal_title = info.get('title')
         await queue.put([downloads_path, title, orginal_title])
@@ -611,7 +617,9 @@ async def command_handler(message):
             except KeyError:
                 pass
             
-            # await asyncio.to_thread(make_progress_spinner(message,False))
+            loop = asyncio.get_event_loop()
+
+            make_progress_spinner(message, loop)
             
             await yt_search(user_id, query_title, 50, 0, 5)
             

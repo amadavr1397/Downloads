@@ -324,8 +324,8 @@ async def show_spinner(chat_id, stop_event):
     msg = await client.send_message(chat_id, text='⠋')
     try:
         for char in itertools.cycle('⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'):
-            if stop_event.is_set():
-                break
+            # if stop_event.is_set():
+            #     break
             try:
                 await msg.edit_text(f"⏳ *در حال جستوجو*... {char}")
             except Exception:

@@ -389,13 +389,13 @@ async def download_youtube(queue, message, url, title):
     downloads_path = Path.home() / "Downloads" / "tmp"
     
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
-    hook = await make_progress_hook(message)
+    # hook = await make_progress_hook(message)
     
     
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
-        'progress_hooks': [hook],
+        'progress_hooks': [lambda d: print(f"\rDownloadingqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None],
         'noplaylist': True,
         'quiet': False,
         'no_warnings': True,
@@ -403,33 +403,33 @@ async def download_youtube(queue, message, url, title):
     }
     
     
-    loop = asyncio.get_running_loop()
-    try:
-        # Run yt-dlp in a thread to keep the bot responsive
-        await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(ydl_opts).download([url]))
-        await message.send_message(message.chat.id,"✅ Download finished!")
-    except Exception as e:
-        # await message.edit_text(f"❌ Download failed: {e}")
-        pass
+    # loop = asyncio.get_running_loop()
+    # try:
+    #     # Run yt-dlp in a thread to keep the bot responsive
+    #     await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(ydl_opts).download([url]))
+    #     await message.send_message(message.chat.id,"✅ Download finished!")
+    # except Exception as e:
+    #     # await message.edit_text(f"❌ Download failed: {e}")
+    #     pass
     
     
-    # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-    #     info = ydl.extract_info(url, download=False)
-    #     print(f"Title: {info.get('title')}")
-    #     print(f"Duration: {info.get('duration_string')}")
-    #     print(f"Saving to: {downloads_path}")
-    #     print('Upload date',info.get('upload_date'))
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+        print(f"Title: {info.get('title')}")
+        print(f"Duration: {info.get('duration_string')}")
+        print(f"Saving to: {downloads_path}")
+        print('Upload date',info.get('upload_date'))
         
         
     
         
-    #     ydl.download([url])
-    #     print("\n✅ Download complete!")
+        ydl.download([url])
+        print("\n✅ Download complete!")
         
-    #     print(f"\n✅ Downloaded: {downloads_path}")
+        print(f"\n✅ Downloaded: {downloads_path}")
         
-    #     orginal_title = info.get('title')
-    #     await queue.put([downloads_path, title, orginal_title])
+        orginal_title = info.get('title')
+        await queue.put([downloads_path, title, orginal_title])
         
         
     

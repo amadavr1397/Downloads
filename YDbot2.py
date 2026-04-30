@@ -617,7 +617,7 @@ async def command_handler(message):
 
             stop_event = asyncio.Event()
             spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
-        
+            await asyncio.sleep(5)
 
             # Run the search (this takes time)
             # await yt_search(queue, user_id, query_title, 50, 0, 5)

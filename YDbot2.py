@@ -57,7 +57,7 @@ def get_video_info(input_path):
     return duration, bitrate
 
     
-async def search_query(user_id, search, number=5, a=0, b=5):
+def search_query(user_id, search, number=5, a=0, b=5):
     """
     Synchronous search – returns list of dicts with 'id', 'title', 'channel', etc.
     Runs in a thread to avoid blocking the bot.
@@ -620,12 +620,12 @@ async def command_handler(message):
 
             # Run the search (this takes time)
             # await yt_search(queue, user_id, query_title, 50, 0, 5)
-            t1 = asyncio.create_task(search_query(user_id, query_title, 50, 0, 5))
+            t1 = asyncio.to_thread(search_query(user_id, query_title, 50, 0, 5))
             
             # stop_event.set()
             # await spinner_task 
             
-            t2 = asyncio.create_task(send_query(user_id, t1))
+            # t2 = asyncio.create_task(send_query(user_id, t1))
             
             # await t1
             # await t2

@@ -327,7 +327,7 @@ def make_progress_bar(percent, length=15):
     return f"┃{bar}┃ {percent:.1f}%"   
 
 
-async def make_progress_hook(msg,d):
+async def make_progress_hook(msg):
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
     
@@ -341,8 +341,8 @@ async def make_progress_hook(msg,d):
         # print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 
         # # Calculate percentage
-    total = d.get("total_bytes") or d.get("total_bytes_estimate")
-    downloaded = d.get("downloaded_bytes", 0)
+    # total = d.get("total_bytes") or d.get("total_bytes_estimate")
+    # downloaded = d.get("downloaded_bytes", 0)
     
     # print(downloaded,total)
 
@@ -376,7 +376,7 @@ async def make_progress_hook(msg,d):
     
     await client.edit_message_text(chat_id=msg.chat.id,
                                    messsage_id=msg.id,
-                                   text=f'{downloaded}')
+                                   text=f'-------------------')
    
 
     # return hook

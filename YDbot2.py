@@ -375,7 +375,7 @@ async def make_progress_hook(msg):
     #                                text=f'{bar}')
     
     await client.edit_message_text(chat_id=msg.chat.id,
-                                   messsage_id=msg.id,
+                                   message_id=msg.id,
                                    text=f'-------------------')
    
 

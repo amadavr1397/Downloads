@@ -319,30 +319,24 @@ async def yt_search(user_id, query_title, number=5, a=0, b=5):
 
 
 
-async def make_progress_spinner(message, bot_loop):
-    
-    msg = await client.send_message(message.chat.id,
-                                    text='⠋')
-    
-    for char in itertools.cycle('⠋⠙⠹⠼⠴⠦⠧⠏'):
-    
-            
+async def show_spinner(chat_id, stop_event):
+    """Show an animated spinner until stop_event is set, then delete the message."""
+    msg = await client.send_message(chat_id, text='⠋')
+    try:
+        for char in itertools.cycle('⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'):
+            if stop_event.is_set():
+                break
             try:
-                # await msg.edit_text(text=f"⏳ *در حال جستوجو*...{char}")
-                
-                asyncio.run_coroutine_threadsafe(
-                    msg.edit_text(text=f"⏳ *در حال جستوجو*...{char}"),
-                    bot_loop
-                )
-                
-            except:
-                pass
+                await msg.edit_text(f"⏳ *در حال جستوجو*... {char}")
+            except Exception:
+                pass    # ignore edit errors (rate limit, message deleted, etc.)
             await asyncio.sleep(0.3)
-        
-        # else:
-            
-        #     await msg.delete()
-            
+    finally:
+        # Cleanup the spinner message when stopped
+        try:
+            await msg.delete()
+        except Exception:
+            pass
             
     
 
@@ -376,6 +370,7 @@ def make_progress_hook(status_message, bot_loop):
             speed = d.get('_speed_str', 'N/A')
             eta = d.get('_eta_str', 'N/A')
             text = f"📥 در حال آپلود...\n{bar_line}\n⚡ {speed}"
+            asyncio.sleep(0.5)
         
         else:
             
@@ -617,11 +612,15 @@ async def command_handler(message):
             except KeyError:
                 pass
             
-            loop = asyncio.get_event_loop()
+            stop_event = asyncio.Event()
+            spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
 
-            await make_progress_spinner(message, loop)
-            
+            # Run the search (this takes time)
             await yt_search(user_id, query_title, 50, 0, 5)
+
+            # Signal the spinner to stop, and wait for it to delete its message
+            stop_event.set()
+            await spinner_task 
             
             # await asyncio.create_task(make_progress_spinner(message,True))
             

@@ -329,6 +329,8 @@ def make_progress_bar(percent, length=15):
 def make_progress_hook(message):
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
+    
+    print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 
     async def hook(d):
         nonlocal last_percent
@@ -387,9 +389,6 @@ async def download_youtube(queue, message, url, title):
     
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
     hook = make_progress_hook(message)
-    
-    await client.send_message(message.chat.id,
-                                            text="uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
     
     
     ydl_opts = {

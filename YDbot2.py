@@ -339,6 +339,8 @@ def make_progress_hook(message):
         total = d.get("total_bytes") or d.get("total_bytes_estimate")
         downloaded = d.get("downloaded_bytes", 0)
 
+        await client.send_message(message.chat.id,
+                                            text="uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
 
         if total == 0:
             

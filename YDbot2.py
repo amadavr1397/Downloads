@@ -339,9 +339,7 @@ def make_progress_hook(message):
         total = d.get("total_bytes") or d.get("total_bytes_estimate")
         downloaded = d.get("downloaded_bytes", 0)
 
-        await client.send_message(message.chat.id,
-                                            text="uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
-
+        
         if total == 0:
             
             percent = downloaded / total * 100
@@ -496,6 +494,7 @@ async def upload_video(queue, message):
         
         
     await message.reply(" دارم ویدیوی مورد علاقه شما رو آپلود میکنم 😋")
+    
 
     print(f"Received message from {message.author.first_name}: {message.text}")
 
@@ -551,7 +550,8 @@ async def upload_video(queue, message):
     await client.send_message(message.chat.id,"😍")
     os.remove(f"{pattern}.mp4")
     
-    print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
+    await client.send_message(message.chat.id,
+                                            text="uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
     
     
     

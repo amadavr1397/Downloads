@@ -332,11 +332,13 @@ async def show_spinner(chat_id, stop_event):
                 pass    # ignore edit errors (rate limit, message deleted, etc.)
             await asyncio.sleep(0.3)
     finally:
-        # Cleanup the spinner message when stopped
-        try:
-            await msg.delete()
-        except Exception:
-            pass
+        
+        pass
+    #     # Cleanup the spinner message when stopped
+    #     try:
+    #         await msg.delete()
+    #     except Exception:
+    #         pass
             
     
 
@@ -614,13 +616,14 @@ async def command_handler(message):
             
             stop_event = asyncio.Event()
             spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
+            
 
             # Run the search (this takes time)
             await yt_search(user_id, query_title, 50, 0, 5)
 
             # Signal the spinner to stop, and wait for it to delete its message
-            stop_event.set()
-            await spinner_task 
+            # stop_event.set()
+            # await spinner_task 
             
             # await asyncio.create_task(make_progress_spinner(message,True))
             

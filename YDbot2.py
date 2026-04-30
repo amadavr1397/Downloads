@@ -398,7 +398,7 @@ async def download_youtube(queue, message, url, title):
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
-        'progress_hooks': [lambda d: make_progress_hook(msg,d) if d['status'] == 'downloading' else None],
+        'progress_hooks': [await make_progress_hook(msg)],
         'noplaylist': True,
         'quiet': False,
         'no_warnings': True,

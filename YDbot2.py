@@ -407,9 +407,10 @@ async def download_youtube(queue, message, url, title):
     try:
         # Run yt-dlp in a thread to keep the bot responsive
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(ydl_opts).download([url]))
-        await message.edit_text("✅ Download finished!")
+        await message.send_message(message.chat.id,"✅ Download finished!")
     except Exception as e:
-        await message.edit_text(f"❌ Download failed: {e}")
+        # await message.edit_text(f"❌ Download failed: {e}")
+        pass
     
     
     # with yt_dlp.YoutubeDL(ydl_opts) as ydl:

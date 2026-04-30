@@ -341,8 +341,10 @@ def make_progress_hook(d):
         # print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 
         # # Calculate percentage
-        # total = d.get("total_bytes") or d.get("total_bytes_estimate")
-        # downloaded = d.get("downloaded_bytes", 0)
+    total = d.get("total_bytes") or d.get("total_bytes_estimate")
+    downloaded = d.get("downloaded_bytes", 0)
+    
+    print(downloaded,total)
 
         
         # if total == 0:

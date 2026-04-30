@@ -67,6 +67,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
     
     stop_event = asyncio.Event()
     spinner_task = asyncio.create_task(show_spinner(user_id, stop_event))
+    asyncio.sleep(1)
     
     if search != "":
         ydl_opts = {
@@ -168,7 +169,10 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         
         print(users_query[users_query['user_id'] == f'{user_id}'])
             
-            
+
+        stop_event.set()
+        await spinner_task
+        
             
         data = users_query[users_query['user_id'] == f'{user_id}']
         await queue.put([search, data])

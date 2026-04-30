@@ -389,7 +389,7 @@ async def download_youtube(queue, message, url, title):
     downloads_path = Path.home() / "Downloads" / "tmp"
     
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
-    hook = make_progress_hook(message)
+    hook = await make_progress_hook(message)
     
     
     ydl_opts = {

@@ -320,7 +320,7 @@ async def yt_search(user_id, query_title, number=5, a=0, b=5):
                         send_query(queue, user_id))
 
 
-def make_progress_bar(percent, length=15):
+def make_progress_bar(percent, length=17):
     filled = int(length * percent // 100)
     bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
     return f"┃{bar}┃ {percent:.1f}%"
@@ -334,7 +334,7 @@ def make_progress_hook(status_message, bot_loop):
         if d['status'] != 'downloading':
             return
 
-        total = d.get('total_bytes') or d.get('total_bytes_estimate')
+        total = d.get('total_bytes')
         downloaded = d.get('downloaded_bytes', 0)
 
         if total and total > 0:
@@ -344,19 +344,27 @@ def make_progress_hook(status_message, bot_loop):
                 return
             last_percent = int_percent
             bar_line = make_progress_bar(percent)
+            
+            speed = d.get('_speed_str', 'N/A')
+            eta = d.get('_eta_str', 'N/A')
+            text = f"📥 در حال آپلود...\n{bar_line}\n⚡ {speed}"
+
+            # Schedule the edit in the bot's event loop (thread-safe)
+            asyncio.run_coroutine_threadsafe(
+                status_message.edit_text(text),
+                bot_loop
+            )
+        
         else:
             # No size info yet – just show a spinner or empty bar
             bar_line = "⬇️ Waiting for size..."
+            
+            asyncio.run_coroutine_threadsafe(
+                status_message.edit_text('✅ فایل آپلود شد'),
+                bot_loop
+            )
 
-        speed = d.get('_speed_str', 'N/A')
-        eta = d.get('_eta_str', 'N/A')
-        text = f"📥 Downloading...\n{bar_line}\n⚡ {speed}  ⏳ {eta}"
-
-        # Schedule the edit in the bot's event loop (thread-safe)
-        asyncio.run_coroutine_threadsafe(
-            status_message.edit_text(text),
-            bot_loop
-        )
+        
 
     return hook
         
@@ -370,7 +378,7 @@ async def download_youtube(queue, message, url, title):
     # hook = make_progress_hook()
     
     msg = await client.send_message(message.chat.id,
-                                        text='_')
+                                        text='در حال آپلود فایل')
     
     loop = asyncio.get_running_loop()
     
@@ -648,8 +656,8 @@ async def command_handler(message):
         
         print(url_vid)
         
-        processing_msg = await message.reply("بزار ببینم چی میشه 😜 ")
-        await processing_msg.edit_text('داره دانلود میشه')
+        # processing_msg = await message.reply("بزار ببینم چی میشه 😜 ")
+        # await processing_msg.edit_text('داره دانلود میشه')
         
         user_id = message.chat.id
         msg_id = message.id

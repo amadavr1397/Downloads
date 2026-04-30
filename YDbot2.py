@@ -65,6 +65,9 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
     global users_query, users_settings
     # global users_band
     
+    stop_event = asyncio.Event()
+    spinner_task = asyncio.create_task(show_spinner(user_id, stop_event))
+    
     if search != "":
         ydl_opts = {
             'quiet': True,
@@ -616,9 +619,9 @@ async def command_handler(message):
             
             queue = asyncio.Queue()
 
-            stop_event = asyncio.Event()
-            spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
-            
+            # stop_event = asyncio.Event()
+            # spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
+        
 
             # Run the search (this takes time)
             await yt_search(queue, user_id, query_title, 50, 0, 5)

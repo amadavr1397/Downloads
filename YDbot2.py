@@ -625,7 +625,7 @@ async def command_handler(message):
 
             # Run the search (this takes time)
             # await yt_search(queue, user_id, query_title, 50, 0, 5)
-            asyncio.create_task(search_query(queue, user_id, query_title, 50, 0, 5))
+            await asyncio.to_thread(search_query(queue, user_id, query_title, 50, 0, 5))
             
             # stop_event.set()
             # await spinner_task 

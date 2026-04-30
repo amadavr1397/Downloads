@@ -326,7 +326,7 @@ def make_progress_bar(percent, length=15):
     bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
     return f"┃{bar}┃ {percent:.1f}%"   
 
-def make_progress_hook(message):
+def make_progress_hook():
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
     
@@ -391,7 +391,7 @@ async def download_youtube(queue, message, url, title):
     downloads_path = Path.home() / "Downloads" / "tmp"
     
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
-    hook = make_progress_hook(message)
+    hook = make_progress_hook()
     
     
     ydl_opts = {

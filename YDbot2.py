@@ -403,34 +403,32 @@ async def download_youtube(queue, message, url, title):
     }
     
     
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        print(f"Title: {info.get('title')}")
-        print(f"Duration: {info.get('duration_string')}")
-        print(f"Saving to: {downloads_path}")
-        print('Upload date',info.get('upload_date'))
+    loop = asyncio.get_running_loop()
+    try:
+        # Run yt-dlp in a thread to keep the bot responsive
+        await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(ydl_opts).download([url]))
+        await message.edit_text("✅ Download finished!")
+    except Exception as e:
+        await message.edit_text(f"❌ Download failed: {e}")
+    
+    
+    # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    #     info = ydl.extract_info(url, download=False)
+    #     print(f"Title: {info.get('title')}")
+    #     print(f"Duration: {info.get('duration_string')}")
+    #     print(f"Saving to: {downloads_path}")
+    #     print('Upload date',info.get('upload_date'))
         
         
+    
         
-
-        # caption = (
-        #     f"🎬 <b>{title}</b>\n"
-        #     f"📅 Uploaded: {formatted_date}\n"
-        #     f"⏱ Duration: {duration}\n"
-        #     f"👁 Views: {views:,}\n"
-        #     f"❤️ Likes: {likes_str}\n\n"
-        #     f"📄 {description}..."
-        # )
+    #     ydl.download([url])
+    #     print("\n✅ Download complete!")
         
+    #     print(f"\n✅ Downloaded: {downloads_path}")
         
-        while True:
-            ydl.download([url])
-        print("\n✅ Download complete!")
-        
-        print(f"\n✅ Downloaded: {downloads_path}")
-        
-        orginal_title = info.get('title')
-        await queue.put([downloads_path, title, orginal_title])
+    #     orginal_title = info.get('title')
+    #     await queue.put([downloads_path, title, orginal_title])
         
         
     

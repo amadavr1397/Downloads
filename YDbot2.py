@@ -327,7 +327,7 @@ def make_progress_bar(percent, length=15):
     return f"┃{bar}┃ {percent:.1f}%"   
 
 
-async def make_progress_hook(message,d):
+async def make_progress_hook(msg,d):
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
     
@@ -347,32 +347,32 @@ async def make_progress_hook(message,d):
     # print(downloaded,total)
 
         
-    if total == 0:
+    # if total == 0:
         
-        percent = downloaded / total * 100
-        int_percent = int(percent)
-        if int_percent == last_percent:
-            return  # no significant change → skip edit
-        last_percent = int_percent
+    #     percent = downloaded / total * 100
+    #     int_percent = int(percent)
+    #     if int_percent == last_percent:
+    #         return  # no significant change → skip edit
+    #     last_percent = int_percent
 
-        bar = make_progress_bar(percent)
+    #     bar = make_progress_bar(percent)
         
-        msg = await client.send_message(message.chat.id,
-                                        text=f'{bar}')
+    #     msg = await client.send_message(message.chat.id,
+    #                                     text=f'{bar}')
         
-    else:
+    # else:
     
-        percent = downloaded / total * 100
-        int_percent = int(percent)
-        if int_percent == last_percent:
-            return  # no significant change → skip edit
-        last_percent = int_percent
+    percent = downloaded / total * 100
+    int_percent = int(percent)
+    if int_percent == last_percent:
+        return  # no significant change → skip edit
+    last_percent = int_percent
 
-        bar = make_progress_bar(percent)
-        
-        await client.edit_message_text(msg.chat.id,
-                                        messsage_id=msg.id,
-                                        text=f'{bar}')
+    bar = make_progress_bar(percent)
+    
+    await client.edit_message_text(msg.chat.id,
+                                    messsage_id=msg.id,
+                                    text=f'{bar}')
    
 
     # return hook
@@ -388,10 +388,13 @@ async def download_youtube(queue, message, url, title):
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
     # hook = make_progress_hook()
     
+    msg = await client.send_message(message.chat.id,
+                                        text='_')
+    
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
-        'progress_hooks': [lambda d: make_progress_hook(message,d) if d['status'] == 'downloading' else None],
+        'progress_hooks': [lambda d: make_progress_hook(msg,d) if d['status'] == 'downloading' else None],
         'noplaylist': True,
         'quiet': False,
         'no_warnings': True,

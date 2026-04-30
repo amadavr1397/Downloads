@@ -57,7 +57,7 @@ def get_video_info(input_path):
     return duration, bitrate
 
     
-async def search_query(queue, user_id, search, number=5, a=0, b=5):
+def search_query(queue, user_id, search, number=5, a=0, b=5):
     """
     Synchronous search – returns list of dicts with 'id', 'title', 'channel', etc.
     Runs in a thread to avoid blocking the bot.
@@ -167,7 +167,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             
         data = users_query[users_query['user_id'] == f'{user_id}']
-        await queue.put([search, data])
+        # await queue.put([search, data])
         
         # return data
         
@@ -237,7 +237,7 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         
         
         data = users_query[users_query['user_id'] == f'{user_id}']
-        await queue.put([search, data])
+        # await queue.put([search, data])
     
     
     

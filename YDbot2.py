@@ -326,7 +326,7 @@ def make_progress_bar(percent, length=15):
     bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
     return f"┃{bar}┃ {percent:.1f}%"   
 
-def make_progress_hook(message):
+async def make_progress_hook(message):
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
     

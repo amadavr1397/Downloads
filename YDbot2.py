@@ -330,12 +330,13 @@ def make_progress_hook(message):
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
     
-    print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 
     async def hook(d):
         nonlocal last_percent
         if d["status"] != "downloading":
             return
+
+        print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 
         # Calculate percentage
         total = d.get("total_bytes") or d.get("total_bytes_estimate")
@@ -401,6 +402,7 @@ async def download_youtube(queue, message, url, title):
         'cookiefile': 'YTDLnis_Cookies.txt',
     }
     
+    
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         print(f"Title: {info.get('title')}")
@@ -421,8 +423,8 @@ async def download_youtube(queue, message, url, title):
         # )
         
         
-
-        ydl.download([url])
+        while True:
+            ydl.download([url])
         print("\n✅ Download complete!")
         
         print(f"\n✅ Downloaded: {downloads_path}")

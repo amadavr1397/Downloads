@@ -334,9 +334,7 @@ def make_progress_hook(d):
     # def hook(d):
     #     nonlocal last_percent
     #     if d["status"] == "downloading":
-            
-    print(d)
-        #     return
+                    #     return
 
         # print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 

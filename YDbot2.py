@@ -362,17 +362,21 @@ async def make_progress_hook(msg,d):
         
     # else:
     
-    percent = downloaded / total * 100
-    int_percent = int(percent)
-    if int_percent == last_percent:
-        return  # no significant change → skip edit
-    last_percent = int_percent
+    # percent = downloaded / total * 100
+    # int_percent = int(percent)
+    # if int_percent == last_percent:
+    #     return  # no significant change → skip edit
+    # last_percent = int_percent
 
-    bar = make_progress_bar(percent)
+    # bar = make_progress_bar(percent)
+    
+    # await client.edit_message_text(chat_id=msg.chat.id,
+    #                                messsage_id=msg.id,
+    #                                text=f'{bar}')
     
     await client.edit_message_text(chat_id=msg.chat.id,
                                    messsage_id=msg.id,
-                                   text=f'{bar}')
+                                   text=f'{downloaded}')
    
 
     # return hook

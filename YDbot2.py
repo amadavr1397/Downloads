@@ -611,11 +611,11 @@ async def command_handler(message):
             except KeyError:
                 pass
             
-            await asyncio.create_task(make_progress_spinner(message,False))
+            await asyncio.to_thread(make_progress_spinner(message,False))
             
             await yt_search(user_id, query_title, 50, 0, 5)
             
-            await asyncio.create_task(make_progress_spinner(message,True))
+            # await asyncio.create_task(make_progress_spinner(message,True))
             
             # btn_0 = InlineKeyboardButton(text="⬇️ مرتبط ترین 🎥 ",callback_data='most')
             # btn_1 = InlineKeyboardButton(text="⬇️ جدید ترین 🎥 ",callback_data='new')

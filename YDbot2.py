@@ -8,11 +8,9 @@ import yt_dlp
 import subprocess
 import json
 import glob
-# import re
+import itertools
 from datetime import datetime
-# import time
 import pandas as pd
-import math
 
 users_query = pd.DataFrame()
 
@@ -320,14 +318,37 @@ async def yt_search(user_id, query_title, number=5, a=0, b=5):
                         send_query(queue, user_id))
 
 
-def make_progress_bar(percent, length=17):
-    filled = int(length * percent // 100)
-    bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
-    return f"┃{bar}┃ {percent:.1f}%"
+
+async def make_progress_spinner(message, stop_event=False):
+    
+    msg = await Client.send_message(message.chat.id,
+                              message_id=message.id,
+                              text='⠋')
+    
+    for char in itertools.cycle('⠋⠙⠹⠼⠴⠦⠧⠏'):
+    
+        if not stop_event:
+            
+            try:
+                await msg.edit_text(text=f"⏳ *در حال جستوجو*...{char}")
+            except:
+                pass
+            await asyncio.sleep(0.3)
+        
+        else:
+            
+            await msg.delete()
+
+
 
 def make_progress_hook(status_message, bot_loop):
     """Returns a sync hook that edits `status_message` with a progress bar."""
     last_percent = -1
+    
+    def make_progress_bar(percent, length=17):
+        filled = int(length * percent // 100)
+        bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
+        return f"┃{bar}┃ {percent:.1f}%"
 
     def hook(d):
         nonlocal last_percent
@@ -356,8 +377,6 @@ def make_progress_hook(status_message, bot_loop):
             )
         
         else:
-            # No size info yet – just show a spinner or empty bar
-            bar_line = "⬇️ Waiting for size..."
             
             asyncio.run_coroutine_threadsafe(
                 status_message.edit_text('✅ فایل آپلود شد'),
@@ -378,7 +397,7 @@ async def download_youtube(queue, message, url, title):
     # hook = make_progress_hook()
     
     msg = await client.send_message(message.chat.id,
-                                        text='در حال آپلود فایل')
+                                        text='در حال دریافت لینک')
     
     loop = asyncio.get_running_loop()
     
@@ -593,7 +612,11 @@ async def command_handler(message):
             except KeyError:
                 pass
             
+            await asyncio.create_task(make_progress_spinner(message,False))
+            
             await yt_search(user_id, query_title, 50, 0, 5)
+            
+            await asyncio.create_task(make_progress_spinner(message,True))
             
             # btn_0 = InlineKeyboardButton(text="⬇️ مرتبط ترین 🎥 ",callback_data='most')
             # btn_1 = InlineKeyboardButton(text="⬇️ جدید ترین 🎥 ",callback_data='new')

@@ -326,59 +326,61 @@ def make_progress_bar(percent, length=15):
     bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
     return f"┃{bar}┃ {percent:.1f}%"   
 
-async def make_progress_hook(message):
+def make_progress_hook(message):
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
     
 
-    async def hook(d):
+    def hook(d):
         nonlocal last_percent
-        if d["status"] != "downloading":
-            return
+        if d["status"] == "downloading":
+            
+            print('gggggggggggggggggggggggggggggtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt')
+        #     return
 
-        print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+        # print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 
-        # Calculate percentage
-        total = d.get("total_bytes") or d.get("total_bytes_estimate")
-        downloaded = d.get("downloaded_bytes", 0)
+        # # Calculate percentage
+        # total = d.get("total_bytes") or d.get("total_bytes_estimate")
+        # downloaded = d.get("downloaded_bytes", 0)
 
         
-        if total == 0:
+        # if total == 0:
             
-            percent = downloaded / total * 100
-            int_percent = int(percent)
-            if int_percent == last_percent:
-                return  # no significant change → skip edit
-            last_percent = int_percent
+        #     percent = downloaded / total * 100
+        #     int_percent = int(percent)
+        #     if int_percent == last_percent:
+        #         return  # no significant change → skip edit
+        #     last_percent = int_percent
 
-            bar = make_progress_bar(percent)
+        #     bar = make_progress_bar(percent)
             
-            msg = await client.send_message(message.chat.id,
-                                            text=f'{bar}')
+        #     msg = await client.send_message(message.chat.id,
+        #                                     text=f'{bar}')
             
-        else:
+        # else:
         
-            percent = downloaded / total * 100
-            int_percent = int(percent)
-            if int_percent == last_percent:
-                return  # no significant change → skip edit
-            last_percent = int_percent
+        #     percent = downloaded / total * 100
+        #     int_percent = int(percent)
+        #     if int_percent == last_percent:
+        #         return  # no significant change → skip edit
+        #     last_percent = int_percent
 
-            bar = make_progress_bar(percent)
+        #     bar = make_progress_bar(percent)
             
-            await client.edit_message_text(msg.chat.id,
-                                           messsage_id=msg.id,
-                                           text=f'{bar}')
+        #     await client.edit_message_text(msg.chat.id,
+        #                                    messsage_id=msg.id,
+        #                                    text=f'{bar}')
             
-        # Schedule the edit on the bot's event loop (thread‑safe)
-        # asyncio.run_coroutine_threadsafe(
-        #     status_message.edit_text(text),
-        #     bot_loop
-        # )
+        # # Schedule the edit on the bot's event loop (thread‑safe)
+        # # asyncio.run_coroutine_threadsafe(
+        # #     status_message.edit_text(text),
+        # #     bot_loop
+        # # )
         
         
 
-    return hook
+    # return hook
     
 
         
@@ -389,13 +391,13 @@ async def download_youtube(queue, message, url, title):
     downloads_path = Path.home() / "Downloads" / "tmp"
     
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
-    # hook = await make_progress_hook(message)
+    hook = make_progress_hook(message)
     
     
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
-        'progress_hooks': [lambda d: print(f"\rDownloadingqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None],
+        'progress_hooks': [hook],
         'noplaylist': True,
         'quiet': False,
         'no_warnings': True,

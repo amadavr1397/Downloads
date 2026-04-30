@@ -311,9 +311,8 @@ async def send_query(queue, user_id):
     users_settings[user_id]['msg_id'] = tmp_msg  
    
     
-async def yt_search(user_id, query_title, number=5, a=0, b=5):
+async def yt_search(queue, user_id, query_title, number=5, a=0, b=5):
     
-    queue = asyncio.Queue()
     await asyncio.gather(search_query(queue, user_id, query_title, number, a, b),
                         send_query(queue, user_id))
 
@@ -324,8 +323,8 @@ async def show_spinner(chat_id, stop_event):
     msg = await client.send_message(chat_id, text='⠋')
     try:
         for char in itertools.cycle('⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'):
-            # if stop_event.is_set():
-            #     break
+            if stop_event.is_set():
+                break
             try:
                 await msg.edit_text(f"⏳ *در حال جستوجو*... {char}")
             except Exception:
@@ -614,12 +613,15 @@ async def command_handler(message):
             except KeyError:
                 pass
             
+            
+            queue = asyncio.Queue()
+
             stop_event = asyncio.Event()
             spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
             
 
             # Run the search (this takes time)
-            await yt_search(user_id, query_title, 50, 0, 5)
+            await yt_search(queue, user_id, query_title, 50, 0, 5)
 
             # Signal the spinner to stop, and wait for it to delete its message
             # stop_event.set()

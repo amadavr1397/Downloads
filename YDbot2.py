@@ -619,7 +619,7 @@ async def command_handler(message):
             
             loop = asyncio.get_event_loop()
 
-            make_progress_spinner(message, loop)
+            await make_progress_spinner(message, loop)
             
             await yt_search(user_id, query_title, 50, 0, 5)
             

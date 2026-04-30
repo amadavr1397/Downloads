@@ -322,66 +322,43 @@ async def yt_search(user_id, query_title, number=5, a=0, b=5):
 
 def make_progress_bar(percent, length=15):
     filled = int(length * percent // 100)
-    # Gradient: dark shade -> light shade -> empty
     bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
-    return f"┃{bar}┃ {percent:.1f}%"   
+    return f"┃{bar}┃ {percent:.1f}%"
 
+def make_progress_hook(status_message, bot_loop):
+    """Returns a sync hook that edits `status_message` with a progress bar."""
+    last_percent = -1
 
-async def make_progress_hook(msg):
-    """Returns a hook that updates `status_message` with a progress bar."""
-    last_percent = -1  # track the last integer percentage sent
-    
+    def hook(d):
+        nonlocal last_percent
+        if d['status'] != 'downloading':
+            return
 
-    # def hook(d):
-    #     nonlocal last_percent
-    #     if d["status"] == "downloading":
-            
-        #     return
+        total = d.get('total_bytes') or d.get('total_bytes_estimate')
+        downloaded = d.get('downloaded_bytes', 0)
 
-        # print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+        if total and total > 0:
+            percent = downloaded / total * 100
+            int_percent = int(percent)
+            if int_percent == last_percent:
+                return
+            last_percent = int_percent
+            bar_line = make_progress_bar(percent)
+        else:
+            # No size info yet – just show a spinner or empty bar
+            bar_line = "⬇️ Waiting for size..."
 
-        # # Calculate percentage
-    # total = d.get("total_bytes") or d.get("total_bytes_estimate")
-    # downloaded = d.get("downloaded_bytes", 0)
-    
-    # print(downloaded,total)
+        speed = d.get('_speed_str', 'N/A')
+        eta = d.get('_eta_str', 'N/A')
+        text = f"📥 Downloading...\n{bar_line}\n⚡ {speed}  ⏳ {eta}"
 
-        
-    # if total == 0:
-        
-    #     percent = downloaded / total * 100
-    #     int_percent = int(percent)
-    #     if int_percent == last_percent:
-    #         return  # no significant change → skip edit
-    #     last_percent = int_percent
+        # Schedule the edit in the bot's event loop (thread-safe)
+        asyncio.run_coroutine_threadsafe(
+            status_message.edit_text(text),
+            bot_loop
+        )
 
-    #     bar = make_progress_bar(percent)
-        
-    #     msg = await client.send_message(message.chat.id,
-    #                                     text=f'{bar}')
-        
-    # else:
-    
-    # percent = downloaded / total * 100
-    # int_percent = int(percent)
-    # if int_percent == last_percent:
-    #     return  # no significant change → skip edit
-    # last_percent = int_percent
-
-    # bar = make_progress_bar(percent)
-    
-    # await client.edit_message_text(chat_id=msg.chat.id,
-    #                                messsage_id=msg.id,
-    #                                text=f'{bar}')
-    
-    await client.edit_message_text(chat_id=msg.chat.id,
-                                   message_id=msg.id,
-                                   text=f'-------------------')
-   
-
-    # return hook
-    
-
+    return hook
         
     
     
@@ -395,25 +372,17 @@ async def download_youtube(queue, message, url, title):
     msg = await client.send_message(message.chat.id,
                                         text='_')
     
+    loop = asyncio.get_running_loop()
+    
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
-        'progress_hooks': [make_progress_hook(msg)],
+        'progress_hooks': [make_progress_hook(msg, loop)],
         'noplaylist': True,
         'quiet': False,
         'no_warnings': True,
         'cookiefile': 'YTDLnis_Cookies.txt',
     }
-    
-    
-    # loop = asyncio.get_running_loop()
-    # try:
-    #     # Run yt-dlp in a thread to keep the bot responsive
-    #     await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(ydl_opts).download([url]))
-    #     await message.send_message(message.chat.id,"✅ Download finished!")
-    # except Exception as e:
-    #     # await message.edit_text(f"❌ Download failed: {e}")
-    #     pass
     
     
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:

@@ -57,7 +57,7 @@ def get_video_info(input_path):
     return duration, bitrate
 
     
-async def search_query(queue, user_id, search, number=5, a=0, b=5):
+async def search_query(user_id, search, number=5, a=0, b=5):
     """
     Synchronous search – returns list of dicts with 'id', 'title', 'channel', etc.
     Runs in a thread to avoid blocking the bot.
@@ -167,7 +167,9 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
             
             
         data = users_query[users_query['user_id'] == f'{user_id}']
-        await queue.put([search, data])
+        # await queue.put([search, data])
+        
+        return data
         
     else:
         
@@ -235,17 +237,15 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         
         
         data = users_query[users_query['user_id'] == f'{user_id}']
-        await queue.put([search, data])
+        return data
     
     
     
     
-async def send_query(queue, user_id):
+async def send_query(user_id, data):
     
 
-    items = await queue.get()
-    search = items[0]
-    usr_query = items[1]
+    usr_query = data
     # usr_query = users_query[users_query['user_id'] == str(user_id)]
     
     # print(usr_query)
@@ -310,10 +310,10 @@ async def send_query(queue, user_id):
     users_settings[user_id]['msg_id'] = tmp_msg  
    
     
-async def yt_search(queue, user_id, query_title, number=5, a=0, b=5):
+# async def yt_search(queue, user_id, query_title, number=5, a=0, b=5):
     
-    await asyncio.gather(search_query(queue, user_id, query_title, number, a, b),
-                        send_query(queue, user_id))
+#     await asyncio.gather(search_query(queue, user_id, query_title, number, a, b),
+#                         send_query(queue, user_id))
 
 
 
@@ -613,7 +613,6 @@ async def command_handler(message):
                 pass
             
             
-            queue = asyncio.Queue()
 
             stop_event = asyncio.Event()
             spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
@@ -621,12 +620,15 @@ async def command_handler(message):
 
             # Run the search (this takes time)
             # await yt_search(queue, user_id, query_title, 50, 0, 5)
-            asyncio.create_task(search_query(queue, user_id, query_title, 50, 0, 5))
+            t1 = asyncio.create_task(search_query(user_id, query_title, 50, 0, 5))
             
             # stop_event.set()
             # await spinner_task 
             
-            asyncio.create_task(send_query(queue, user_id))
+            t2 = asyncio.create_task(send_query(user_id, t1))
+            
+            # await t1
+            # await t2
 
             # Signal the spinner to stop, and wait for it to delete its message
             # stop_event.set()

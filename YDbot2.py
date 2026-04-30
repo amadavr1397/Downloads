@@ -57,7 +57,7 @@ def get_video_info(input_path):
     return duration, bitrate
 
     
-def search_query(user_id, search, number=5, a=0, b=5):
+async def search_query(queue, user_id, search, number=5, a=0, b=5):
     """
     Synchronous search – returns list of dicts with 'id', 'title', 'channel', etc.
     Runs in a thread to avoid blocking the bot.
@@ -167,9 +167,9 @@ def search_query(user_id, search, number=5, a=0, b=5):
             
             
         data = users_query[users_query['user_id'] == f'{user_id}']
-        # await queue.put([search, data])
+        await queue.put([search, data])
         
-        return data
+        # return data
         
     else:
         
@@ -237,7 +237,7 @@ def search_query(user_id, search, number=5, a=0, b=5):
         
         
         data = users_query[users_query['user_id'] == f'{user_id}']
-        return data
+        await queue.put([search, data])
     
     
     
@@ -320,18 +320,22 @@ async def send_query(user_id, data):
 async def show_spinner(chat_id, stop_event):
     """Show an animated spinner until stop_event is set, then delete the message."""
     msg = await client.send_message(chat_id, text='⠋')
-    try:
-        for char in itertools.cycle('⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'):
-            if stop_event.is_set():
-                break
-            try:
-                await msg.edit_text(f"⏳ *در حال جستوجو*... {char}")
-            except Exception:
-                pass    # ignore edit errors (rate limit, message deleted, etc.)
-            await asyncio.sleep(0.3)
-    finally:
+    
+    while True:
         
-        pass
+        ch = ['⠋','⠙','⠼','⠴','⠦','⠧']
+        try:
+            for char in ch:
+                if stop_event.is_set():
+                    break
+                try:
+                    await msg.edit_text(f"⏳ *در حال جستوجو*... {char}")
+                except Exception:
+                    pass    # ignore edit errors (rate limit, message deleted, etc.)
+                await asyncio.sleep(0.3)
+        finally:
+            
+            pass
     #     # Cleanup the spinner message when stopped
     #     try:
     #         await msg.delete()
@@ -613,6 +617,7 @@ async def command_handler(message):
                 pass
             
             
+            queue = asyncio.Queue()
 
             stop_event = asyncio.Event()
             spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
@@ -620,7 +625,7 @@ async def command_handler(message):
 
             # Run the search (this takes time)
             # await yt_search(queue, user_id, query_title, 50, 0, 5)
-            t1 = asyncio.to_thread(search_query(user_id, query_title, 50, 0, 5))
+            asyncio.to_thread(search_query(queue, user_id, query_title, 50, 0, 5))
             
             # stop_event.set()
             # await spinner_task 

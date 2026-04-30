@@ -322,8 +322,7 @@ async def yt_search(user_id, query_title, number=5, a=0, b=5):
 async def make_progress_spinner(message, stop_event=False):
     
     msg = await Client.send_message(message.chat.id,
-                              message_id=message.id,
-                              text='⠋')
+                                    text='⠋')
     
     for char in itertools.cycle('⠋⠙⠹⠼⠴⠦⠧⠏'):
     

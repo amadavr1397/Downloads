@@ -326,7 +326,7 @@ def make_progress_bar(percent, length=15):
     bar = '▓' * filled + '▒' * (min(2, length - filled)) + '░' * max(0, length - filled - 2)
     return f"┃{bar}┃ {percent:.1f}%"   
 
-def make_progress_hook():
+def make_progress_hook(d):
     """Returns a hook that updates `status_message` with a progress bar."""
     last_percent = -1  # track the last integer percentage sent
     
@@ -335,7 +335,7 @@ def make_progress_hook():
     #     nonlocal last_percent
     #     if d["status"] == "downloading":
             
-    print('gggggggggggggggggggggggggggggtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt')
+    print(d)
         #     return
 
         # print('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
@@ -397,7 +397,7 @@ async def download_youtube(queue, message, url, title):
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
-        'progress_hooks': [lambda d: make_progress_hook() if d['status'] == 'downloading' else None],
+        'progress_hooks': [lambda d: make_progress_hook(d) if d['status'] == 'downloading' else None],
         'noplaylist': True,
         'quiet': False,
         'no_warnings': True,

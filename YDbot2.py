@@ -611,7 +611,7 @@ async def command_handler(message):
             except KeyError:
                 pass
             
-            await asyncio.to_thread(make_progress_spinner(message,False))
+            # await asyncio.to_thread(make_progress_spinner(message,False))
             
             await yt_search(user_id, query_title, 50, 0, 5)
             

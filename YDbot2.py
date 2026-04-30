@@ -617,16 +617,16 @@ async def command_handler(message):
 
             stop_event = asyncio.Event()
             spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
-            await asyncio.sleep(5)
+            await asyncio.sleep(3)
 
             # Run the search (this takes time)
             # await yt_search(queue, user_id, query_title, 50, 0, 5)
-            await search_query(queue, user_id, query_title, 50, 0, 5)
+            await asyncio.to_thread(search_query(queue, user_id, query_title, 50, 0, 5))
             
             stop_event.set()
             await spinner_task 
             
-            await send_query(queue, user_id)
+            asyncio.create_task(send_query(queue, user_id))
 
             # Signal the spinner to stop, and wait for it to delete its message
             # stop_event.set()

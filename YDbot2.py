@@ -387,12 +387,11 @@ async def download_youtube(queue, message, url, title):
     
     # [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None]
     # hook = make_progress_hook()
-    print(message)
     
     ydl_opts = {
         'format': 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]',           # Best MP4 with audio
         'outtmpl': f"{downloads_path}/{title}.mp4",
-        'progress_hooks': [lambda d: make_progress_hook(d) if d['status'] == 'downloading' else None],
+        'progress_hooks': [lambda d: make_progress_hook(message,d) if d['status'] == 'downloading' else None],
         'noplaylist': True,
         'quiet': False,
         'no_warnings': True,

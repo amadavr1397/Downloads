@@ -65,10 +65,6 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
     global users_query, users_settings
     # global users_band
     
-    stop_event = asyncio.Event()
-    spinner_task = asyncio.create_task(show_spinner(user_id, stop_event))
-    asyncio.sleep(1)
-    
     if search != "":
         ydl_opts = {
             'quiet': True,
@@ -169,10 +165,6 @@ async def search_query(queue, user_id, search, number=5, a=0, b=5):
         
         print(users_query[users_query['user_id'] == f'{user_id}'])
             
-
-        stop_event.set()
-        await spinner_task
-        
             
         data = users_query[users_query['user_id'] == f'{user_id}']
         await queue.put([search, data])
@@ -623,12 +615,18 @@ async def command_handler(message):
             
             queue = asyncio.Queue()
 
-            # stop_event = asyncio.Event()
-            # spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
+            stop_event = asyncio.Event()
+            spinner_task = asyncio.create_task(show_spinner(message.chat.id, stop_event))
         
 
             # Run the search (this takes time)
-            await yt_search(queue, user_id, query_title, 50, 0, 5)
+            # await yt_search(queue, user_id, query_title, 50, 0, 5)
+            await search_query(queue, user_id, query_title, 50, 0, 5)
+            
+            stop_event.set()
+            await spinner_task 
+            
+            await send_query(queue, user_id)
 
             # Signal the spinner to stop, and wait for it to delete its message
             # stop_event.set()

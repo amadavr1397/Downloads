@@ -10,7 +10,7 @@ from balethon.objects import InlineKeyboard, InlineKeyboardButton
 # --- Configuration ---
 TEMP_DIR = "temp_files"
 EXTRACT_DIR = "tmp"
-CHUNK_SIZE = 15 * 1024 * 1024  # 10 MB in bytes
+CHUNK_SIZE = 10 * 1024 * 1024  # 10 MB in bytes
 
 TOKEN = input("Please enter BOT TOKEN:\n")
 bot = Client(TOKEN)
@@ -36,10 +36,16 @@ async def update_progress(message: Message, text: str, current, total):
 
 @bot.on_message()
 async def handle_commands(message: Message):
+    global CHUNK_SIZE
     if message.text.startswith("/d"):
         await download_and_unzip(message)
-    # elif message.text.startswith("/u"):
-    #     await split_and_upload(message)
+    elif message.text.startswith("/s"):
+        
+        CHUNK_SIZE = int(message.text.split(" ", 1))
+        CHUNK_SIZE = CHUNK_SIZE * 1024 * 1024
+        
+        await message.reply(f'Size of parts: {CHUNK_SIZE}')
+        
 
 async def download_and_unzip(message: Message):
     # Extract URL from command: /d https://github.com/...
@@ -134,7 +140,7 @@ async def split_and_upload(message: Message, final_zip):
 @bot.on_callback_query()
 async def handle_callback(callback_query):
     
-    callback_query.message.delete()
+    # callback_query.message.delete()
     
     if (callback_query.data.startswith('U')):
         

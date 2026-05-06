@@ -133,7 +133,7 @@ async def split_and_upload(message: Message, final_zip):
             
             # Upload part
             await status_msg.edit_text(f"Uploading part {part_num}...")
-            await bot.send_document(message.chat.id, part_name)
+            await client.send_document(message.chat.id, part_name)
             
             # os.remove(part_name) # Remove part after upload
             part_num += 1

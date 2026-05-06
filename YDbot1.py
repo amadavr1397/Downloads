@@ -755,6 +755,17 @@ async def command_handler(message):
                                                     /s <size parts> \
                                                     /d <video address> \
                                                     ')
+
+    global CHUNK_SIZE
+    elif message.text.startswith("/d"):
+        await download_and_unzip(message)
+    
+    elif message.text.startswith("/sz"):
+        
+        CHUNK_SIZE = int(message.text.split(" ", 1))
+        CHUNK_SIZE = CHUNK_SIZE * 1024 * 1024
+        
+        await message.reply(f'Size of parts: {CHUNK_SIZE}')
         
 @client.on_callback_query()
 async def handle_callback(callback_query):

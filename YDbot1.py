@@ -31,10 +31,22 @@ client = Client(BOT_TOKEN)
 
 target_size_mb = 10
 
-# configs = {}
+# --- Helper Functions ---
+def progress_bar(current, total, length=10):
+    """Generates a visual progress bar string."""
+    percent = current / total
+    filled_length = int(length * percent)
+    bar = "■" * filled_length + "□" * (length - filled_length)
+    return f"[{bar}] {percent:.1%}"
 
-
-# resualt = 1
+async def update_progress(message: Message, text: str, current, total):
+    """Updates the message with the current progress."""
+    bar = progress_bar(current, total)
+    try:
+        # await asyncio.sleep(1)
+        await message.edit_text(f"{text}\n{bar}")
+    except Exception:
+        pass  # Avoid flooding with edit errors if content is same
 
 def get_video_info(input_path):
     """Retrieve duration and total bitrate using ffprobe."""

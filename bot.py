@@ -5,6 +5,7 @@ import asyncio
 import httpx
 from balethon import Client
 from balethon.objects import Message
+from balethon.objects import InlineKeyboard, InlineKeyboardButton
 
 # --- Configuration ---
 TEMP_DIR = "temp_files"
@@ -80,14 +81,19 @@ async def download_and_unzip(message: Message):
             zip_ref.extract(file, EXTRACT_DIR)
             if i % 5 == 0 or i == total_files: # Update every 5 files to avoid rate limits
                 await update_progress(status_msg, "Extracting...", i, total_files)
+                
+                
+    btn = InlineKeyboardButton(text=" ⬇️ Download ",callback_data=f'U{zip_path}')
+    keyboard = InlineKeyboard()
+    keyboard.add_row(btn)
 
-    await status_msg.edit_text("✅ Downloaded and Extracted. Use /u to upload parts.")
+    await status_msg.edit_text("✅ Downloaded and Extracted. Use this button to upload parts.", reply_markup=keyboard)
 
-async def split_and_upload(message: Message):
+async def split_and_upload(message: Message, final_zip):
     status_msg = await message.reply("Preparing to split and upload...")
     
     # Create a full zip of the extracted folder first
-    final_zip = "to_upload.zip"
+    # final_zip = "to_upload.zip"
     with zipfile.ZipFile(final_zip, 'w', zipfile.ZIP_DEFLATED) as z:
         for root, dirs, files in os.walk(EXTRACT_DIR):
             for file in files:
@@ -122,6 +128,19 @@ async def split_and_upload(message: Message):
     if os.path.exists(final_zip): os.remove(final_zip)
     
     await status_msg.edit_text("✨ Task completed and temporary files deleted.")
+    
+    
+@bot.on_callback_query()
+async def handle_callback(callback_query):
+    
+    
+    if (callback_query.data.startswith('U')):
+        
+        file_name = callback_query.data[1:]
+        
+        print(file_name)
+    
+        # split_and_upload(callback_query.data, file_name)
 
 if __name__ == "__main__":
     print("Bot is running...")

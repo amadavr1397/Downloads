@@ -43,11 +43,12 @@ async def handle_commands(message: Message):
 async def download_and_unzip(message: Message):
     # Extract URL from command: /d https://github.com/...
     args = message.text.split(" ", 1)
+    file_name = message.text.split('/')[-1]
     if len(args) < 2:
         return await message.reply("Please provide a GitHub URL: `/d [url]`")
     
     url = args[1]
-    zip_path = os.path.join(TEMP_DIR, "downloaded.zip")
+    zip_path = os.path.join(TEMP_DIR, file_name)
     
     if not os.path.exists(TEMP_DIR):
         os.makedirs(TEMP_DIR)

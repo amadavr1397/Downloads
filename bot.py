@@ -26,7 +26,7 @@ async def update_progress(message: Message, text: str, current, total):
     """Updates the message with the current progress."""
     bar = progress_bar(current, total)
     try:
-        await asyncio.sleep(1)
+        # await asyncio.sleep(1)
         await message.edit_text(f"{text}\n{bar}")
     except Exception:
         pass  # Avoid flooding with edit errors if content is same

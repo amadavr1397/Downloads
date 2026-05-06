@@ -30,6 +30,7 @@ BOT_TOKEN = input(f"Enter a TOKEN : \n")
 client = Client(BOT_TOKEN)
 
 target_size_mb = 10
+CHUNK_SIZE = 10 * 1024 * 1024
 
 # --- Helper Functions ---
 def progress_bar(current, total, length=10):

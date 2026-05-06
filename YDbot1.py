@@ -31,6 +31,9 @@ BOT_TOKEN = input(f"Enter a TOKEN : \n")
 client = Client(BOT_TOKEN)
 
 target_size_mb = 10
+
+TEMP_DIR = "temp_file"
+EXTRACT_DIR = "extracted_file"
 CHUNK_SIZE = 10 * 1024 * 1024
 
 # --- Helper Functions ---

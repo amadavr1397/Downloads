@@ -606,7 +606,7 @@ async def yt_download(message, url_vid, new_title, video_size):
 @client.on_message()
 async def command_handler(message):
     
-    global users_query, target_size_mb
+    global users_query, target_size_mb, CHUNK_SIZE
     
     if message.text.startswith('/start'):
         
@@ -849,7 +849,7 @@ async def command_handler(message):
                                                     /d <video address> \
                                                     ')
 
-    global CHUNK_SIZE
+    
     elif message.text.startswith("/d"):
         await download_and_unzip(message)
     

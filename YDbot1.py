@@ -926,6 +926,14 @@ async def handle_callback(callback_query):
             
             # await yt_search(user_id, message_id, '', 50, a, b)
 
+        elif (callback_query.data.startswith('U')):
+        
+            file_name = callback_query.data[1:]
+            
+            print(file_name)
+        
+            await split_and_upload(callback_query.message, file_name)
+
                         
             
         # query_info = await asyncio.to_thread(search_videos, query_search, 6, 'search_type')

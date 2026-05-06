@@ -1,5 +1,6 @@
 import asyncio
 from balethon import Client
+from balethon.objects import Message
 from balethon.objects import InlineKeyboard, InlineKeyboardButton
 import numpy as np
 import os

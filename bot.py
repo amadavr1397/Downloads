@@ -134,6 +134,7 @@ async def split_and_upload(message: Message, final_zip):
 @bot.on_callback_query()
 async def handle_callback(callback_query):
     
+    callback_query.message.delete()
     
     if (callback_query.data.startswith('U')):
         

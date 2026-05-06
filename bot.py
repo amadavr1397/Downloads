@@ -115,10 +115,10 @@ async def split_and_upload(message: Message):
             part_num += 1
 
     # Cleanup
-    await status_msg.edit_text("🧹 Cleaning up temporary files...")
-    if os.path.exists(TEMP_DIR): shutil.rmtree(TEMP_DIR)
-    if os.path.exists(EXTRACT_DIR): shutil.rmtree(EXTRACT_DIR)
-    if os.path.exists(final_zip): os.remove(final_zip)
+    # await status_msg.edit_text("🧹 Cleaning up temporary files...")
+    # if os.path.exists(TEMP_DIR): shutil.rmtree(TEMP_DIR)
+    # if os.path.exists(EXTRACT_DIR): shutil.rmtree(EXTRACT_DIR)
+    # if os.path.exists(final_zip): os.remove(final_zip)
     
     await status_msg.edit_text("✨ Task completed and temporary files deleted.")
 

@@ -102,6 +102,7 @@ async def split_and_upload(message: Message, final_zip):
 
     # Split into 10MB parts
     file_size = os.path.getsize(final_zip)
+    name = final_zip.split('/')[-1].split('.')[0]
     part_num = 1
     
     with open(final_zip, "rb") as f:
@@ -110,7 +111,7 @@ async def split_and_upload(message: Message, final_zip):
             if not chunk:
                 break
             
-            part_name = f"part_{part_num}.zip"
+            part_name = f"{name}_part_{part_num}.zip"
             with open(part_name, "wb") as chunk_file:
                 chunk_file.write(chunk)
             
@@ -118,7 +119,7 @@ async def split_and_upload(message: Message, final_zip):
             await status_msg.edit_text(f"Uploading part {part_num}...")
             await bot.send_document(message.chat.id, part_name)
             
-            os.remove(part_name) # Remove part after upload
+            # os.remove(part_name) # Remove part after upload
             part_num += 1
 
     # Cleanup
@@ -140,7 +141,7 @@ async def handle_callback(callback_query):
         
         print(file_name)
     
-        # split_and_upload(callback_query.data, file_name)
+        split_and_upload(callback_query.data, file_name)
 
 if __name__ == "__main__":
     print("Bot is running...")

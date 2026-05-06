@@ -38,8 +38,8 @@ async def update_progress(message: Message, text: str, current, total):
 async def handle_commands(message: Message):
     if message.text.startswith("/d"):
         await download_and_unzip(message)
-    elif message.text.startswith("/u"):
-        await split_and_upload(message)
+    # elif message.text.startswith("/u"):
+    #     await split_and_upload(message)
 
 async def download_and_unzip(message: Message):
     # Extract URL from command: /d https://github.com/...
@@ -141,7 +141,7 @@ async def handle_callback(callback_query):
         
         print(file_name)
     
-        split_and_upload(callback_query.data, file_name)
+        await split_and_upload(callback_query.data, file_name)
 
 if __name__ == "__main__":
     print("Bot is running...")

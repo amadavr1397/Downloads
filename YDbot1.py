@@ -49,6 +49,98 @@ async def update_progress(message: Message, text: str, current, total):
     except Exception:
         pass  # Avoid flooding with edit errors if content is same
 
+
+async def download_and_unzip(message: Message):
+    # Extract URL from command: /d https://github.com/...
+    args = message.text.split(" ", 1)
+    file_name = message.text.split('/')[-1]
+    if len(args) < 2:
+        return await message.reply("Please provide a GitHub URL: `/d [url]`")
+    
+    url = args[1]
+    zip_path = os.path.join(TEMP_DIR, file_name)
+    
+    if not os.path.exists(TEMP_DIR):
+        os.makedirs(TEMP_DIR)
+
+    status_msg = await message.reply("Initializing download...")
+
+    # 1. Download with progress
+    async with httpx.AsyncClient() as client:
+        async with client.stream("GET", url, follow_redirects=True) as response:
+            total_size = int(response.headers.get("Content-Length", 0))
+            downloaded = 0
+            
+            with open(zip_path, "wb") as f:
+                async for chunk in response.aiter_bytes():
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    if total_size > 0:
+                        await update_progress(status_msg, "Downloading...", downloaded, total_size)
+
+    # 2. Unzip with progress
+    await status_msg.edit_text("Extracting files...")
+    if not os.path.exists(EXTRACT_DIR):
+        os.makedirs(EXTRACT_DIR)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        all_files = zip_ref.namelist()
+        total_files = len(all_files)
+        for i, file in enumerate(all_files, 1):
+            zip_ref.extract(file, EXTRACT_DIR)
+            if i % 5 == 0 or i == total_files: # Update every 5 files to avoid rate limits
+                await update_progress(status_msg, "Extracting...", i, total_files)
+                
+                
+    btn = InlineKeyboardButton(text=" ⬇️ Download ",callback_data=f'U{zip_path}')
+    keyboard = InlineKeyboard()
+    keyboard.add_row(btn)
+
+    await status_msg.edit_text("✅ Downloaded and Extracted. Use this button to upload parts.", reply_markup=keyboard)
+
+async def split_and_upload(message: Message, final_zip):
+    status_msg = await message.reply("Preparing to split and upload...")
+    
+    # Create a full zip of the extracted folder first
+    # final_zip = "to_upload.zip"
+    with zipfile.ZipFile(final_zip, 'w', zipfile.ZIP_DEFLATED) as z:
+        for root, dirs, files in os.walk(EXTRACT_DIR):
+            for file in files:
+                z.write(os.path.join(root, file), 
+                        os.path.relpath(os.path.join(root, file), EXTRACT_DIR))
+
+    # Split into 10MB parts
+    file_size = os.path.getsize(final_zip)
+    name = final_zip.split('/')[-1].split('.')[0]
+    part_num = 1
+    
+    with open(final_zip, "rb") as f:
+        while True:
+            chunk = f.read(CHUNK_SIZE)
+            if not chunk:
+                break
+            
+            part_name = f"{name}_part_{part_num}.zip"
+            with open(part_name, "wb") as chunk_file:
+                chunk_file.write(chunk)
+            
+            # Upload part
+            await status_msg.edit_text(f"Uploading part {part_num}...")
+            await bot.send_document(message.chat.id, part_name)
+            
+            # os.remove(part_name) # Remove part after upload
+            part_num += 1
+
+    # Cleanup
+    await status_msg.edit_text("🧹 Cleaning up temporary files...")
+    if os.path.exists(TEMP_DIR): shutil.rmtree(TEMP_DIR)
+    if os.path.exists(EXTRACT_DIR): shutil.rmtree(EXTRACT_DIR)
+    if os.path.exists(final_zip): os.remove(final_zip)
+    
+    await status_msg.edit_text("✨ Task completed and temporary files deleted.")
+
+
+
 def get_video_info(input_path):
     """Retrieve duration and total bitrate using ffprobe."""
     cmd = [

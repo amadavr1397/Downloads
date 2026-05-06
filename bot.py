@@ -141,7 +141,7 @@ async def handle_callback(callback_query):
         
         print(file_name)
     
-        await split_and_upload(callback_query.data, file_name)
+        await split_and_upload(callback_query.message, file_name)
 
 if __name__ == "__main__":
     print("Bot is running...")

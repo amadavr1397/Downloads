@@ -166,6 +166,8 @@ async def download_and_split_link(message, size):
         pass
     else:
         os.mkdir('splited_parts')
+        
+    msg = await client.send_message(message.chat.id, f'درحال دانلود \n {name} ...*')
     
     try:
             print('file Downloading ...')
@@ -186,15 +188,16 @@ async def download_and_split_link(message, size):
     
     print(files)
     
+    msg.edit_text(f'درحال آپلود پارت های\n {name}')
+    
     file = f'splited_parts/{name}.zip'
-    msg = await message.send_message(message.chat.id, f'درحال آپلود پارت های\n {name}')
-    await message.send_document(message.chat.id, file)
+    await client.send_document(message.chat.id, file)
     
     for ind in range(len(files)):
         
         file = f'splited_parts/{name}.z{ind+1:02d}'
         
-        await message.send_document(message.chat.id, file)
+        await client.send_document(message.chat.id, file)
     
     await msg.reply('همه پارت ها آپلود شد :)')
     

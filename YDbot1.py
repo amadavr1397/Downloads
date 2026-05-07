@@ -731,11 +731,11 @@ async def command_handler(message):
         typ = message.text.split("/")[-1].split(".")[-1]
         print(typ)
         
-        # if type == 'zip':
-        #     await download_and_unzip(message)
+        if type == 'zip':
+            await download_and_unzip(message)
             
-        # else:
-        #     await download_and_split_link(message)
+        else:
+            await download_and_split_link(message)
     
     elif message.text.startswith("/sz"):
         

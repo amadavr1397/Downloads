@@ -149,12 +149,11 @@ async def split_and_upload(message: Message, final_zip):
 async def download_and_split_link(message, size):
     
     lnk = message.text.split(' ')[1]
-    name = message.text.split('/')[-1].split('.')[0]
-    typ  = message.text.split('/')[-1].split('.')[-1]
+    name = message.text.split('/')[-1]
     # folder = f"{message.chat.id}_{message.id}_file"
     folder = 'j'
     
-    print(lnk,name,typ,folder)
+    print(lnk,name,folder)
     
     if os.path.exists(folder):
         pass
@@ -168,12 +167,12 @@ async def download_and_split_link(message, size):
     
     try:
             print('file Downloading ...')
-            os.system(f'wget {lnk} -O {folder}/{name}.{typ}')
+            os.system(f'wget {lnk} -O {folder}/{name}')
             
             print('File Spliting ...')
-            os.system(f"zip -s {size}m -r splited_parts/{name}.{typ} {folder}/{name}.{typ}")
+            os.system(f"zip -s {size}m -r splited_parts/{name} {folder}/{name}")
             
-            print(f'Download {name}.{typ} is Done')
+            print(f'Download {name} is Done')
             
     except Exception as e:
         

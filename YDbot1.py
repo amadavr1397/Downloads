@@ -745,7 +745,7 @@ async def command_handler(message):
     elif message.text.startswith("/sz"):
         
         CHUNK_SIZE = int(message.text.split(" ", 1))
-        CHUNK_SIZE = CHUNK_SIZE * 1024 * 1024
+        # CHUNK_SIZE = CHUNK_SIZE * 1024 * 1024
         
         await message.reply(f'Size of parts: {CHUNK_SIZE}')
         

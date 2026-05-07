@@ -728,7 +728,7 @@ async def command_handler(message):
     
     elif message.text.startswith("/d"):
         
-        typ = message.text.split("/", -1)
+        typ = message.text.split("/")[-1].split(".")[-1]
         print(typ)
         
         # if type == 'zip':

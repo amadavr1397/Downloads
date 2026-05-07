@@ -182,9 +182,22 @@ async def download_and_split_link(message, size):
         
             print(e)
             
-    files = glob.glob(f'splited_parts/{name}.*')
+    files = glob.glob(f'splited_parts/{name}.z*')
     
     print(files)
+    
+    file = f'splited_parts/{name}.zip'
+    msg = await message.send_message(message.chat.id, f'درحال آپلود پارت های\n {name}')
+    await message.send_document(message.chat.id, file)
+    
+    for ind in range(len(files)):
+        
+        file = f'splited_parts/{name}.z{ind+1:02d}'
+        
+        await message.send_document(message.chat.id, file)
+    
+    await msg.reply('همه پارت ها آپلود شد :)')
+    
 
 def get_video_info(input_path):
     """Retrieve duration and total bitrate using ffprobe."""

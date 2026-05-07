@@ -735,7 +735,7 @@ async def command_handler(message):
             await download_and_unzip(message)
             
         else:
-            await download_and_split_link(message)
+            await download_and_split_link(message, CHUNK_SIZE)
     
     elif message.text.startswith("/sz"):
         

@@ -153,10 +153,10 @@ async def download_and_split_link(message, size):
     typ  = message.text.split('/')[-1].split('.')[-1]
     folder = f"{message.chat.id}_{message.id}_file"
     
-    if Path.exists(f'{folder}_file'):
+    if Path.exists(f'{folder}'):
         pass
     else:
-        Path.mkdir(f'{folder}_file')
+        Path.mkdir(f'{folder}')
     
     if Path.exists('splited_parts'):
         pass

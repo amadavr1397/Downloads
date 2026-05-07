@@ -146,7 +146,30 @@ async def split_and_upload(message: Message, final_zip):
     
     await status_msg.edit_text("✨ Task completed and temporary files deleted.")
 
-
+async def download_and_split_link(message, size):
+    
+    lnk = message.text.split(' ', 1)
+    name = message.text.split('/',-1).split('.',0)
+    typ  = message.text.split('/',-1).split('.',-1)
+    folder = f"{message.chat.id}_{message.id}_file"
+    
+    if Path.exists(f'{folder}_file'):
+        pass
+    else:
+        Path.mkdir(f'{folder}_file')
+    
+    if Path.exists('splited_parts'):
+        pass
+    else:
+        Path.mkdir('splited_parts')
+    
+    try:
+            os.system(f'wget {lnk} -O {folder}/{name}.{typ}')
+            os.system(f"zip -s {size}m -r splited_parts/{name}.{typ} {folder}/{name}.{typ}")
+            
+    except Exception as e:
+        
+            print(e)
 
 def get_video_info(input_path):
     """Retrieve duration and total bitrate using ffprobe."""
@@ -644,12 +667,6 @@ async def command_handler(message):
             
             query_title = message.text.split(' ')[1:]
             user_id = message.chat.id
-            # message_id = message.id
-            
-            
-            # [a,b] = users_query[users_query['user_id'] == str(user_id)]['band'].to_list()[0]
-            
-            # print(a,b)
             
             try:
                 # users_query = users_query[users_query['user_id'] != f'{user_id}']
@@ -660,50 +677,8 @@ async def command_handler(message):
             
             await yt_search(user_id, query_title, 50, 0, 5)
             
-            # btn_0 = InlineKeyboardButton(text="⬇️ مرتبط ترین 🎥 ",callback_data='most')
-            # btn_1 = InlineKeyboardButton(text="⬇️ جدید ترین 🎥 ",callback_data='new')
-                
-            # keyboard = InlineKeyboard()
-            # keyboard.add_row(btn_0,btn_1)
-        
-            # await message.reply('میخوای جدیدترین ویدیو رو دانلود کنم یا مرتبط ترین رو',
-            #                     reply_markup=keyboard)
+            print(f'USER {message.chat.id} Search the {query_title}')
             
-            
-            # key = {
-            #     # 'user_id': message.author.id,
-            #     'message_id': str(message.id),
-            #     'query': yt_search,
-            #     'query_time': datetime.now().strftime("%H%M%S%f"),
-            #     'info': ''
-            # }
-            # configs.append(key)
-            # configs[str(message.chat.id)] = yt_search
-            
-            print(f'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa {message.chat.id}')
-            
-            
-            # loop = asyncio.get_event_loop()
-            # query_search = await loop.run_in_executor(None, search_videos, yt_search, 10)
-            
-            # # print(query_search[1]['id'])
-            
-            # for i,query in enumerate(query_search):
-                
-            #     print(query['thumbnail'])
-                
-            #     btn = InlineKeyboardButton(text="⬇️ Download 🎥 ",callback_data='btn')
-                
-            #     keyboard = InlineKeyboard()
-            #     keyboard.add_row(btn)
-                
-            #     # await client.send_message(message.chat.id,f'{i}: {query['id']} , {query['title']} , {query['url']}' )
-            #     await client.send_photo(message.chat.id,query['thumbnail'],
-            #                             f'نام: {query['title']} 🎬 \
-            #                             چنل: {query['channel']} 🌐 \
-            #                             مدت زمان: {query['duration']} ⏰ \
-            #                             بارگذاری: {query['uplad_date']} 📥',
-            #                             reply_markup=keyboard)
 
     elif message.text.startswith('https://www.youtube.com/'):
         
@@ -730,14 +705,8 @@ async def command_handler(message):
         # define new title with message chat id and message id
         new_title = f'{str(user_id)}_{str(msg_id)}'
         
-        # video_path , title = download_youtube(url_vid,new_title)
-        
-        # input_file = f"{video_path}/{new_title}.mp4"
-        # output_pat = f"{downloads_path}/{new_title}___part_%03d.mp4"
-        
         try:
             
-            # users_query = users_query[users_query['user_id'] != f'{user_id}']
             users_settings.pop(user_id)
             
             
@@ -746,119 +715,26 @@ async def command_handler(message):
             pass
         
         await yt_download(message, url_vid, new_title, target_size_mb)
-        print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',len(users_settings))
 
-        
-        # queue = asyncio.Queue()
-        # await asyncio.ghater(download_youtube(queue,url_vid,new_title), 
-        #                     split_video_by_size(queue, client.target_size_mb),
-        #                     upload_video(queue, message))
-        
-        
-        # os.system(f'mv {video_path}/NA.mp4 {video_path}/{new_title}.mp4')
-        
-        # print(f'ggggggggggggggggggggggg {title} {video_path} {new_title}')
-        
-        # video_path , title = ["/home/amad","2026-04-07-03-09-32"]
-        # video_path , title = download_youtube(url[1])
-        # print('Fully succuss downloads :)')
-        
-        
-        
-        # safe_chars = re.compile(r'[<>:"/\\|?*]')
-        
-        # os.system(f'mv {video_path}/{title}.mp4 {video_path}/{new_title}.mp4')
-
-
-        
-        # input_file = f"{video_path}/{new_title}.mp4"
-        # output_pat = f"{downloads_path}/{new_title}___part_%03d.mp4"
-        # # target_size_mb = 15
-        
-        # # split_video_by_size(input_file, output_pat, target_size_mb=50)
-        
-        # loop = asyncio.get_event_loop()
-        # await loop.run_in_executor(None, split_video_by_size, input_file, output_pat, client.target_size_mb )
-
-        # lst = glob.glob(f'{downloads_path}/{new_title}___part_*.mp4')
-        
-        # print(lst)
-        
-        
-        # await message.reply(" دارم ویدیوی مورد علاقه شما رو آپلود میکنم 😋")
-
-        # print(f"Received message from {message.author.first_name}: {message.text}")
-
-        # # filename = "/home/amad/Downloads/v1.mp4"
-        
-        # await message.reply(f"تعداد پارت های ویدیو {len(lst)}")
-        
-        # for i in range(len(lst)):
-            
-        #     vid_pth = f'{downloads_path}/{new_title}___part_{i:03d}.mp4'
-            
-        #     print(vid_pth)
-            
-        #     for count in range(10):
-                
-        #         try:
-                    
-        #             print(f'Try {count+1} to Send {vid_pth}')
-                    
-        #             with open(vid_pth, "rb") as video_file:
-                    
-        #                 await client.send_video(message.chat.id,
-        #                     video=video_file,
-        #                     caption=f"پارت {i+1} \n{title}.mp4 👍"
-        #                 )
-                        
-                    
-        #             print("Send Successfully")
-                                
-        #             os.remove(f'{downloads_path}/{new_title}___part_{i:03d}.mp4')
-                    
-                
-        #             break
-
-                
-        #         except FileNotFoundError:
-        #             print(f"Send Successfully : {title}")
-        #             # await message.reply("Send Successfully")
-        #         except Exception as e:
-        #             print(f"Sorry i dont Send query : {e}")
-        #             await asyncio.sleep(2)
-        #             # await message.reply("نتونستم درخواست شما رو انجام بدم 🥵")
-        #             # os.remove(f'{downloads_path}/{new_title}___part_{i:03d}.mp4')
-                    
-        #     if (count >= 9):
-                
-        #         await message.reply("نتونستم درخواست شما رو انجام بدم 🥵")
-        #         os.remove(f'{downloads_path}/{new_title}___part_{i:03d}.mp4')
-                
-        #     await asyncio.sleep(1)
-            
-            
-                
-        # # org_vid_pth = "Downloads" / f"{title}.mp4"
-        
-        # os.remove(f"{downloads_path}/{new_title}.mp4")
-                
-            
-                
-        # await message.reply(f'کل ویدیوی دلخواهتو گرفتم 🥳 \n{title}')
-        # await client.send_message(message.chat.id,"😍")
-        
             
     elif message.text.startswith('/help'):
         
-        await client.send_message(message.chat.id,f'/strat : welcom to your bot \
+        await client.send_message(message.chat.id,f"/strat : welcom to your bot \
                                                     /s <size parts> \
-                                                    /d <video address> \
-                                                    ')
+                                                    /d <Downloadable File Link: apk, zip, tar.gz, exe> \
+                                                    /sz Size of file parts \
+                                                    ")
 
     
     elif message.text.startswith("/d"):
-        await download_and_unzip(message)
+        
+        typ = message.text.split("/", -1).split('.',-1)
+        
+        if type == 'zip':
+            await download_and_unzip(message)
+            
+        else:
+            await download_and_split_link(message)
     
     elif message.text.startswith("/sz"):
         
@@ -871,24 +747,6 @@ async def command_handler(message):
 async def handle_callback(callback_query):
         global users_settings
         
-        # print(users_query)
-    # if callback_query.data == "help_pressed":
-        # await callback_query.message.reply(f'{user_id}_{random()}')
-        # await callback_query.answer("Help shown!")  # Acknowledge the button press
-     
-        # print(configs[callback_query.chat_instance])
-        
-        # user_id = callback_query.chat_instance
-        # message_id = configs[callback_query.chat_instance]['message_id']
-        # query_title = configs[callback_query.chat_instance]['query']
-        
-    
-        # if (callback_query.data == 'most'):
-            
-        #     search_type = False
-            
-        #     print('fgffgg')
-        #     await yt_search(user_id, message_id, query_title, 10)
             
         if (callback_query.data.startswith('D')):
             
@@ -896,16 +754,13 @@ async def handle_callback(callback_query):
             user_id = callback_query.message.chat.id
             id = str[1]
             
-            # nonlocal users_query
-            # print(user_id,id)
-            # print(users_settings[user_id])
-                        
                         
             url_vid = f"https://www.youtube.com/watch?v={id}"
             new_title = f"{user_id}_{id}"
             
             global target_size_mb
             await yt_download(callback_query.message, url_vid, new_title, target_size_mb)
+            
             
         elif (callback_query.data.startswith('M')):
             
@@ -931,7 +786,6 @@ async def handle_callback(callback_query):
             
             await yt_search(user_id, '', 50, a, b)
             
-            # await yt_search(user_id, message_id, '', 50, a, b)
 
         elif (callback_query.data.startswith('U')):
         
@@ -942,33 +796,7 @@ async def handle_callback(callback_query):
             await split_and_upload(callback_query.message, file_name)
 
                         
-            
-        # query_info = await asyncio.to_thread(search_videos, query_search, 6, 'search_type')
-        
-        # print(query_info)
-        
-        # global ttt
-        # ttt = await asyncio.to_thread(test,ttt)
-        
-        # await send_info_query(callback_query.chat_instance, configs[callback_query.chat_instance])
-        
-        # for i,query in enumerate(configs[callback_query.chat_instance]['info']):
-            
-        #     # print(query['thumbnail'])
-            
-        #     btn = InlineKeyboardButton(text="⬇️ Download 🎥 ",callback_data=f'{callback_query.chat_instance}_{query['info']['message_id']}')
-            
-        #     keyboard = InlineKeyboard()
-        #     keyboard.add_row(btn)
-            
-        #     # await client.send_message(message.chat.id,f'{i}: {query['id']} , {query['title']} , {query['url']}' )
-        #     await client.send_photo(callback_query.chat_instance,query['thumbnail'],
-        #                             f'نام: {query['info']['title']} 🎬 \
-        #                             چنل: {query['info']['channel']} 🌐 \
-        #                             مدت زمان: {query['info']['duration']} ⏰ \
-        #                             بارگذاری: {query['info']['upload_date']} 📥',
-        #                             reply_markup=keyboard)
-        
+           
 # Start the bot (this runs an infinite polling loop)
 if __name__ == "__main__":
     print("Bot is running...")

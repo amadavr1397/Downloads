@@ -37,7 +37,7 @@ target_size_mb = 10
 
 TEMP_DIR = "temp_file"
 EXTRACT_DIR = "extracted_file"
-CHUNK_SIZE = 10 * 1024 * 1024
+CHUNK_SIZE = 10
 
 # --- Helper Functions ---
 def progress_bar(current, total, length=10):

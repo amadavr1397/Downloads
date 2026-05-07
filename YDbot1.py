@@ -152,8 +152,8 @@ async def download_and_split_link(message, size):
     name = message.text.split('/')[-1].split('.')[:-1]
     name = ''.join(name)
     typ = message.text.split('/')[-1].split('.')[-1]
-    # folder = f"{message.chat.id}_{message.id}_file"
-    folder = 'j'
+    folder = f"{message.chat.id}_{message.id}_file"
+    # folder = 'j'
     
     print(lnk,name,folder)
     
@@ -188,7 +188,7 @@ async def download_and_split_link(message, size):
     
     print(files)
     
-    msg.edit_text(f'درحال آپلود پارت های\n {name}')
+    await msg.edit_text(f'درحال آپلود پارت های\n {name}')
     
     file = f'splited_parts/{name}.zip'
     await client.send_document(message.chat.id, file)
@@ -197,7 +197,22 @@ async def download_and_split_link(message, size):
         
         file = f'splited_parts/{name}.z{ind+1:02d}'
         
-        await client.send_document(message.chat.id, file)
+        for trial in range(10):
+            
+            try:
+                await client.send_document(message.chat.id, file)
+                break
+                
+            except Exception as e:
+                
+                await client.send_message(message.chat.id,f'در تلاش {trial+1} نتونستن آپلود کنم')
+        
+        os.remove(file)
+        
+        if trial > 8:
+            await client.send_message(message.chat.id, f'نشد که بشه\n{file}')
+            
+        
     
     await msg.reply('همه پارت ها آپلود شد :)')
     

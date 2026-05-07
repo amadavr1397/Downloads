@@ -148,7 +148,7 @@ async def split_and_upload(message: Message, final_zip):
 
 async def download_and_split_link(message, size):
     
-    lnk = message.text.split(' ', 1)
+    lnk = message.text.split(' ')[1]
     name = message.text.split('/')[-1].split('.')[0]
     typ  = message.text.split('/')[-1].split('.')[-1]
     # folder = f"{message.chat.id}_{message.id}_file"

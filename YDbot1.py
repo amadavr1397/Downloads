@@ -173,12 +173,18 @@ async def download_and_split_link(message, size):
             
             print('File Spliting ...')
             os.system(f"zip -s {size}m -r splited_parts/{name}.zip {folder}")
+            os.remove(f'{folder}/{name}.{typ}')
+
             
             print(f'Download {name}.{typ} is Done')
             
     except Exception as e:
         
             print(e)
+            
+    files = glob.glob(f'splited_parts/{name}.*')
+    
+    print(files)
 
 def get_video_info(input_path):
     """Retrieve duration and total bitrate using ffprobe."""

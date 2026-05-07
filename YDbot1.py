@@ -731,7 +731,7 @@ async def command_handler(message):
         typ = message.text.split("/")[-1].split(".")[-1]
         print(typ)
         
-        if type == 'zip':
+        if typ == 'zip':
             await download_and_unzip(message)
             
         else:

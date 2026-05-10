@@ -461,12 +461,14 @@ async def send_query(queue, user_id):
         
         keyboard_ = InlineKeyboard()
         keyboard_.add_row(btn)
-        
+
+        #upload_date
         
         try:
             msg_id = await client.send_photo(user_id,query['thumbnail'],
-                                f"🎬 نام: {query['title']}  \
-                                🌐 چنل: {query['upload_date']}  \
+                                f"🎬 نام: {query['title']}\n \
+                                🌐 چنل: {query['channel']}\n \
+                                📅 تاریخ: {query['upload_date']}\n \
                                 ⏰ مدت زمان: {query['duration']}",
                                 reply_markup=keyboard_)
             
@@ -478,9 +480,10 @@ async def send_query(queue, user_id):
             print(f'It has Error {e}')
             
             msg_id = await client.send_message(user_id,
-                                f'🎬 نام: {query['title']}  \
-                                🌐 چنل: {query['channel']}  \
-                                ⏰ مدت زمان: {query['duration']} ',
+                                f"🎬 نام: {query['title']}\n \
+                                🌐 چنل: {query['channel']}\n \
+                                📅 تاریخ: {query['upload_date']}\n \
+                                ⏰ مدت زمان: {query['duration']}",
                                 reply_markup=keyboard_)
             
             tmp_msg.append(msg_id)

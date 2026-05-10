@@ -745,7 +745,7 @@ async def command_handler(message):
             print(f'USER {message.chat.id} Search the {query_title}')
             
 
-    elif (message.text.startswith('https://www.youtube.com/')) | (message.text.startswith('https://www.youtu.be/')):
+    elif (message.text.startswith('https://www.youtube.com/')) | (message.text.startswith('https://youtu.be/')):
         
         downloads_path =  Path.home() / "Downloads" / "tmp"
     

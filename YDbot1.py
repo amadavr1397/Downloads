@@ -466,9 +466,9 @@ async def send_query(queue, user_id):
         
         try:
             msg_id = await client.send_photo(user_id,query['thumbnail'],
-                                f"🎬 نام: {query['title']}\n \
-                                🌐 چنل: {query['channel']}\n \
-                                📅 تاریخ: {query['upload_date']}\n \
+                              f"🎬 نام: {query['title']}   \n \
+                                🌐 چنل: {query['channel']}   \n \
+                                📅 تاریخ: {query['upload_date']}   \n \
                                 ⏰ مدت زمان: {query['duration']}",
                                 reply_markup=keyboard_)
             
@@ -480,9 +480,9 @@ async def send_query(queue, user_id):
             print(f'It has Error {e}')
             
             msg_id = await client.send_message(user_id,
-                                f"🎬 نام: {query['title']}\n \
-                                🌐 چنل: {query['channel']}\n \
-                                📅 تاریخ: {query['upload_date']}\n \
+                                f"🎬 نام: {query['title']}   \n \
+                                🌐 چنل: {query['channel']}   \n \
+                                📅 تاریخ: {query['upload_date']}   \n \
                                 ⏰ مدت زمان: {query['duration']}",
                                 reply_markup=keyboard_)
             

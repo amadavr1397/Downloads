@@ -733,6 +733,24 @@ async def vid_download(message):
     print(url_vid)
     print(info)
     
+    
+    downloads_path = Path.home() / "Downloads" / "tmp_x"
+    
+    ydl_opts = {
+        'outtmpl': f"{downloads_path}/asdsad.mp4",
+        'progress_hooks': [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None],
+        'quiet': False,
+        'no_warnings': True,
+        'cookiefile': 'YTDLnis_Cookies_x.txt',
+    }
+    
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url_vid, download=False)
+        print(f"Title: {info.get('title')}")
+        print(f"Duration: {info.get('duration_string')}")
+        print(f"Saving to: {downloads_path}")
+        print('Upload date:',info.get('upload_date'))
+    
 @client.on_message()
 async def command_handler(message):
     

@@ -836,7 +836,7 @@ async def command_handler(message):
     
         if (len(message.text.split(' ')) == 2):
             
-            vid_download(message)
+            await vid_download(message)
             
     
     elif message.text.startswith("/sz"):

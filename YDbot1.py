@@ -728,17 +728,18 @@ async def vid_download(message):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info =  ydl.extract_info(url_vid, download=False)
         
-    await message.reply('Got Link')
+    msg = await message.reply('Got Link')
         
     print(url_vid)
     print(info)
     
     
     downloads_path = Path.home() / "Downloads" / "tmp_x"
+    name = f'{message.chat.id}_{message.id}_x'
     
     ydl_opts = {
         'format': 'best',
-        'outtmpl': f"{downloads_path}/asdsad.mp4",
+        'outtmpl': f"{downloads_path}/{name}.mp4",
         'progress_hooks': [lambda d: print(f"\rDownloading: {d['_percent_str']} of {d['_total_bytes_str']}", end="") if d['status'] == 'downloading' else None],
         'cookiefile': 'YTDLnis_Cookies_x.txt',
     }
@@ -750,6 +751,67 @@ async def vid_download(message):
             print(f"\nSuccessfully downloaded")
         except Exception as e:
             print(f"An error occurred: {e}")
+            
+        
+    await msg.edit_text(f'درحال ارسال \n {name} ...*')
+    
+    try:
+                 
+            print('File Spliting ...')
+            os.system(f"zip -s 15m -r {downloads_path}/{name}.zip {downloads_path}")
+            # os.remove(f'{folder}/{name}.{typ}')
+            os.remove(f'{downloads_path}/{name}.mp4')
+            
+    except Exception as e:
+        
+            print(e)
+            
+    files = glob.glob(f'splited_parts/{name}.z*')
+        
+    
+    file = f' {downloads_path}/{name}.zip'
+    
+    msg_ = await client.send_message(message.chat.id,'.')
+    
+    for trial in range(10):
+        
+        try:
+            
+            await msg_.send_document(file)
+            break
+        
+        except Exception as e:
+            
+             await msg_.edit_text(f'در تلاش {trial+1} نتونستم آپلود کنم')
+             
+    os.remove(file)
+        
+    if trial > 9:
+        await msg_.edit_text(f'نشد که بشه\n{file}')
+            
+    
+    # for ind in range(len(files)-1):
+        
+    #     file = f' {downloads_path}/{name}.z{ind+1:02d}'
+        
+    #     for trial in range(10):
+            
+    #         try:
+    #             await client.send_document(message.chat.id, file)
+    #             break
+                
+    #         except Exception as e:
+                
+    #             await client.send_message(message.chat.id,f'در تلاش {trial+1} نتونستن آپلود کنم')
+        
+    #     os.remove(file)
+        
+    #     if trial > 8:
+    #         await client.send_message(message.chat.id, f'نشد که بشه\n{file}')
+            
+        
+    
+    await msg.reply('همه پارت ها آپلود شد :)')
     
 @client.on_message()
 async def command_handler(message):
@@ -857,7 +919,7 @@ async def command_handler(message):
     
         if (len(message.text.split(' ')) == 2):
             
-            await vid_download(message)
+            name = await vid_download(message)
             
     
     elif message.text.startswith("/sz"):

@@ -777,7 +777,7 @@ async def vid_download(message):
         
         try:
             
-            await msg_.send_document(file)
+            await msg_.edit_document(file)
             break
         
         except Exception as e:

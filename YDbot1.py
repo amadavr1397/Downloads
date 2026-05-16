@@ -171,14 +171,28 @@ async def download_and_split_link(message, size):
     
     try:
             print('file Downloading ...')
-            os.system(f'wget {lnk} -O {folder}/{name}.{typ}')
-            
-            print('File Spliting ...')
-            os.system(f"zip -s {size}m -r splited_parts/{name}.zip {folder}")
-            os.remove(f'{folder}/{name}.{typ}')
+            if typ ==  "":
+                os.system(f'wget {lnk} -O {folder}/{name}')
+                
+                print('File Spliting ...')
+                os.system(f"zip -s {size}m -r splited_parts/{name}.zip {folder}")
+                # os.remove(f'{folder}/{name}')
+                os.remove(f'{folder}')
 
+                
+                print(f'Download {name} is Done')
+                
+                
+            else:
+                os.system(f'wget {lnk} -O {folder}/{name}.{typ}')
             
-            print(f'Download {name}.{typ} is Done')
+                print('File Spliting ...')
+                os.system(f"zip -s {size}m -r splited_parts/{name}.zip {folder}")
+                # os.remove(f'{folder}/{name}.{typ}')
+                os.remove(f'{folder}')
+
+                
+                print(f'Download {name}.{typ} is Done')
             
     except Exception as e:
         
@@ -796,11 +810,13 @@ async def command_handler(message):
         typ = message.text.split("/")[-1].split(".")[-1]
         print(typ)
         
-        if typ == 'zip':
-            await download_and_unzip(message)
+        await download_and_split_link(message, CHUNK_SIZE)
+        
+        # if typ == 'zip':
+        #     await download_and_unzip(message)
             
-        else:
-            await download_and_split_link(message, CHUNK_SIZE)
+        # else:
+        #     await download_and_split_link(message, CHUNK_SIZE)
     
     elif message.text.startswith("/sz"):
         

@@ -17,7 +17,7 @@ import math
 import shutil
 import zipfile
 import httpx
-
+ 
 users_query = pd.DataFrame()
 
 users_settings = {}

@@ -770,23 +770,23 @@ async def vid_download(message):
     
     file = f' {downloads_path}/{name}.zip'
     
-    msg_ = await client.send_message(message.chat.id,'.')
+    # msg_ = await client.send_message(message.chat.id,'.')
     
     for trial in range(10):
         
         try:
             
-            await client.send_document(msg_.chat.id, file)
+            await client.send_document(message.chat.id, file)
             break
         
         except Exception as e:
             
-            await client.send_message(msg_.chat.id,f'در تلاش {trial+1} نتونستم آپلود کنم')
+            await client.send_message(message.chat.id,f'در تلاش {trial+1} نتونستم آپلود کنم')
              
     os.remove(file)
         
-    if trial > 9:
-        await msg_.edit_text(f'نشد که بشه\n{file}')
+    # if trial > 9:
+    #     await .edit_text(f'نشد که بشه\n{file}')
             
     
     

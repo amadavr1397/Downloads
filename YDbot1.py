@@ -776,12 +776,12 @@ async def vid_download(message):
         
         try:
             
-            await client.send_document(msg_, file)
+            await client.send_document(msg_.chat.id, file)
             break
         
         except Exception as e:
             
-            await client.send_message(msg_,f'در تلاش {trial+1} نتونستم آپلود کنم')
+            await client.send_message(msg_.chat.id,f'در تلاش {trial+1} نتونستم آپلود کنم')
              
     os.remove(file)
         

@@ -714,24 +714,24 @@ async def yt_download(message, url_vid, new_title, video_size):
 
 async def vid_download(message):
     
-    ydl_opts = {
-                'quiet': True,
-                'skip_download': True,
-                'remote_components': ['ejs:github'],
-                'cookiefile': 'YTDLnis_Cookies_x.txt',
-                'js_runtime': 'deno',
-        }  
+    # ydl_opts = {
+    #             'quiet': True,
+    #             'skip_download': True,
+    #             'remote_components': ['ejs:github'],
+    #             'cookiefile': 'YTDLnis_Cookies_x.txt',
+    #             'js_runtime': 'deno',
+    #     }  
     
     
-    url_vid = message.text.split(' ')[1]
+    # url_vid = message.text.split(' ')[1]
                         
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info =  ydl.extract_info(url_vid, download=False)
+    # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    #     info =  ydl.extract_info(url_vid, download=False)
         
     msg = await message.reply('Got Link')
         
-    print(url_vid)
-    print(info)
+    # print(url_vid)
+    # print(info)
     
     
     downloads_path = Path.home() / "Downloads" / "tmp_x"

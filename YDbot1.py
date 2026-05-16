@@ -766,7 +766,6 @@ async def vid_download(message):
         
             print(e)
             
-    files = glob.glob(f'splited_parts/{name}.z*')
         
     
     file = f' {downloads_path}/{name}.zip'
@@ -777,12 +776,12 @@ async def vid_download(message):
         
         try:
             
-            await msg_.edit_document(file)
+            await client.send_document(msg_, file)
             break
         
         except Exception as e:
             
-             await msg_.edit_text(f'در تلاش {trial+1} نتونستم آپلود کنم')
+            await client.send_message(msg_,f'در تلاش {trial+1} نتونستم آپلود کنم')
              
     os.remove(file)
         
@@ -790,6 +789,9 @@ async def vid_download(message):
         await msg_.edit_text(f'نشد که بشه\n{file}')
             
     
+    
+    # files = glob.glob(f'splited_parts/{name}.z*')
+
     # for ind in range(len(files)-1):
         
     #     file = f' {downloads_path}/{name}.z{ind+1:02d}'

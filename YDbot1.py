@@ -727,6 +727,8 @@ async def vid_download(message):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info =  ydl.extract_info(url_vid, download=False)
         
+    await message.reply('Got Link')
+        
     print(url_vid)
     print(info)
     
@@ -831,7 +833,7 @@ async def command_handler(message):
         await download_and_split_link(message, CHUNK_SIZE)
         
         
-    elif message.text.startswith('/x'):
+    elif message.text.startswith("/x"):
                 
     
         if (len(message.text.split(' ')) == 2):

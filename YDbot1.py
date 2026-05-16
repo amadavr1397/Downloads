@@ -215,7 +215,7 @@ async def download_and_split_link(message, size):
         
         except Exception as e:
             
-             await client.send_message(message.chat.id,f'در تلاش {trial+1} نتونستن آپلود کنم')
+             await client.send_message(message.chat.id,f'در تلاش {trial+1} نتونستم آپلود کنم')
              
     os.remove(file)
         
@@ -711,6 +711,24 @@ async def yt_download(message, url_vid, new_title, video_size):
                         split_video_by_size(queue, video_size),
                         upload_video(queue, message))
 
+
+async def vid_download(message):
+    
+    ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+                'remote_components': ['ejs:github'],
+                'js_runtime': 'deno',
+        }  
+    
+    
+    url_vid = message.text.split(' ')[1]
+                        
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info =  ydl.extract_info(url_vid, download=False)
+        
+    print(url_vid)
+    print(info)
     
 @client.on_message()
 async def command_handler(message):
@@ -812,11 +830,14 @@ async def command_handler(message):
         
         await download_and_split_link(message, CHUNK_SIZE)
         
-        # if typ == 'zip':
-        #     await download_and_unzip(message)
+        
+    elif message.text.startswith('/x'):
+                
+    
+        if (len(message.text.split(' ')) == 2):
             
-        # else:
-        #     await download_and_split_link(message, CHUNK_SIZE)
+            vid_download(message)
+            
     
     elif message.text.startswith("/sz"):
         

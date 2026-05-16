@@ -718,6 +718,7 @@ async def vid_download(message):
                 'quiet': True,
                 'skip_download': True,
                 'remote_components': ['ejs:github'],
+                'cookiefile': 'YTDLnis_Cookies_x.txt',
                 'js_runtime': 'deno',
         }  
     

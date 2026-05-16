@@ -723,7 +723,7 @@ async def vid_download(message):
     #     }  
     
     
-    # url_vid = message.text.split(' ')[1]
+    url_vid = message.text.split(' ')[1]
                         
     # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
     #     info =  ydl.extract_info(url_vid, download=False)

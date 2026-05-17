@@ -772,6 +772,7 @@ async def vid_download(message):
     
     files = glob.glob(f'{downloads_path}/{name}.z*')
     
+    await msg.edit_text(f'تعداد پارت های ویدیو: {len(files)+1}')
     
     for trial in range(10):
         

@@ -770,7 +770,8 @@ async def vid_download(message):
     
     file = f'{downloads_path}/{name}.zip'
     
-    # msg_ = await client.send_message(message.chat.id,'.')
+    files = glob.glob(f'{downloads_path}/{name}.z*')
+    
     
     for trial in range(10):
         
@@ -790,7 +791,7 @@ async def vid_download(message):
             
     
     
-    files = glob.glob(f'{downloads_path}/{name}.z*')
+    
 
     for ind in range(len(files)-1):
         

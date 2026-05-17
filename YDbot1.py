@@ -768,7 +768,7 @@ async def vid_download(message):
             
         
     
-    file = f' {downloads_path}/{name}.zip'
+    file = f'{downloads_path}/{name}.zip'
     
     # msg_ = await client.send_message(message.chat.id,'.')
     

@@ -758,7 +758,7 @@ async def vid_download(message):
     try:
                  
             print('File Spliting ...')
-            os.system(f"zip -s 15m -r {downloads_path}/{name}.zip {downloads_path}")
+            os.system(f"zip -s 19m -r {downloads_path}/{name}.zip {downloads_path}")
             # os.remove(f'{folder}/{name}.{typ}')
             os.remove(f'{downloads_path}/{name}.mp4')
             
@@ -772,7 +772,7 @@ async def vid_download(message):
     
     files = glob.glob(f'{downloads_path}/{name}.z*')
     
-    await msg.edit_text(f'تعداد پارت های ویدیو: {len(files)+1}')
+    await msg.edit_text(f'تعداد پارت های ویدیو: {len(files)}')
     
     for trial in range(10):
         

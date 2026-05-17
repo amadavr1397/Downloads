@@ -785,31 +785,31 @@ async def vid_download(message):
              
     os.remove(file)
         
-    # if trial > 9:
-    #     await .edit_text(f'نشد که بشه\n{file}')
+    if trial > 9:
+        await msg.edit_text(f'نشد که بشه\n{file}')
             
     
     
-    # files = glob.glob(f'splited_parts/{name}.z*')
+    files = glob.glob(f'{downloads_path}/{name}.z*')
 
-    # for ind in range(len(files)-1):
+    for ind in range(len(files)-1):
         
-    #     file = f' {downloads_path}/{name}.z{ind+1:02d}'
+        file = f'{downloads_path}/{name}.z{ind+1:02d}'
         
-    #     for trial in range(10):
+        for trial in range(10):
             
-    #         try:
-    #             await client.send_document(message.chat.id, file)
-    #             break
+            try:
+                await client.send_document(message.chat.id, file)
+                break
                 
-    #         except Exception as e:
+            except Exception as e:
                 
-    #             await client.send_message(message.chat.id,f'در تلاش {trial+1} نتونستن آپلود کنم')
+                await client.send_message(message.chat.id,f'در تلاش {trial+1} نتونستم آپلود کنم')
         
-    #     os.remove(file)
+        os.remove(file)
         
-    #     if trial > 8:
-    #         await client.send_message(message.chat.id, f'نشد که بشه\n{file}')
+        if trial > 9:
+            await client.send_message(message.chat.id, f'نشد که بشه\n{file}')
             
         
     
